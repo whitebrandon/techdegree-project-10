@@ -10,6 +10,7 @@ Date of Last Modification: 05/04/2019
 // load modules
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
+const cors = require('cors');
 const express = require('express');
 const { sequelize } = require('./models');
 const userRouter = require('./routes/users');
@@ -36,6 +37,7 @@ const app = express();
 //                           MIDDLEWARE FUNCTIONS                               //
 // ============================================================================ //
 
+app.use(cors());
 // setup morgan which gives us http request logging
 app.use(morgan('dev'));
 // parses incoming urlencoded requests that are json
