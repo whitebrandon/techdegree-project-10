@@ -1,4 +1,8 @@
 import React from 'react';
+// import UserSignIn from './components/UserSignIn';
+// import UserSignUp from './components/UserSignUp';
+// import UpdateCourse from './components/UpdateCourse';
+import CreateCourse from './components/CreateCourse';
 
 class App extends React.Component {
 
@@ -18,18 +22,24 @@ class App extends React.Component {
   }
   render () {
     return (
-      <div>
-        {this.state.courses.map((courseObject, index) => 
-        <ul key={index}>
-          <li className="title">{courseObject.title}</li>
-          <li>{courseObject.description}</li>
-          {courseObject.estimatedTime ? <li>{courseObject.estimatedTime}</li> : null}
-          {courseObject.materialsNeeded ? <li>{courseObject.materialsNeeded}</li> : null}
-          <li>Professor: {`${courseObject.User.firstName} ${courseObject.User.lastName}`}</li>
-          <li>Email: {courseObject.User.emailAddress}</li>
-        </ul>
-        )}
-      </div>
+
+      // <UserSignIn />
+      // <UserSignUp />
+      // <UpdateCourse />
+      <CreateCourse />
+
+      // <div>
+      //   {this.state.courses.map((courseObject, index) => 
+      //   <ul key={index}>
+      //     <li className="title">{courseObject.title}</li>
+      //     <li>{courseObject.description}</li>
+      //     {courseObject.estimatedTime ? <li>{courseObject.estimatedTime}</li> : null}
+      //     {courseObject.materialsNeeded ? <li>{courseObject.materialsNeeded}</li> : null}
+      //     <li>Professor: {`${courseObject.User.firstName} ${courseObject.User.lastName}`}</li>
+      //     <li>Email: {courseObject.User.emailAddress}</li>
+      //   </ul>
+      //   )}
+      // </div>
     )
   }
 

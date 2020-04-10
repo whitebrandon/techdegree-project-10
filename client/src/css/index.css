@@ -1,4 +1,4 @@
-body {
+/* body {
   background: #cd435a;
 }
 
@@ -8,4 +8,8 @@ body {
 
 li {
   list-style-type: none;
+} */
+
+button {
+  margin-right: 8px;
 }
