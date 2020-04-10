@@ -1,8 +1,9 @@
 import React from 'react';
 // import UserSignIn from './components/UserSignIn';
-// import UserSignUp from './components/UserSignUp';
+import UserSignUp from './components/UserSignUp';
 // import UpdateCourse from './components/UpdateCourse';
-import CreateCourse from './components/CreateCourse';
+// import CreateCourse from './components/CreateCourse';
+import Header from './components/Header';
 
 class App extends React.Component {
 
@@ -22,11 +23,18 @@ class App extends React.Component {
   }
   render () {
     return (
-
+      <React.Fragment>
+      <Header />
+        {/* <React.Fragment> */}
+          <div>
+            <UserSignUp />
+          </div>
+        {/* </React.Fragment> */}
+      </React.Fragment>
       // <UserSignIn />
       // <UserSignUp />
       // <UpdateCourse />
-      <CreateCourse />
+      // <CreateCourse />
 
       // <div>
       //   {this.state.courses.map((courseObject, index) => 

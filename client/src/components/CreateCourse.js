@@ -28,8 +28,8 @@ const CreateCourse = (props) => {
             <input type="textarea" className="form-control" id="materialsNeeded" placeholder="List materials..." />
           </div>
         </div>
-      <button type="submit" className="btn btn-primary rounded">Create Course</button>
-      <button type="submit" className="btn btn-secondary rounded">Cancel</button>
+      <button type="submit" className="btn btn-primary rounded m-1">Create Course</button>
+      <button type="submit" className="btn btn-secondary rounded m-1">Cancel</button>
     </form>
   )
 }
