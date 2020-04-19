@@ -1,9 +1,13 @@
 import React from 'react';
-// import UserSignIn from './components/UserSignIn';
+import { BrowserRouter as Router, Route, Switch, /* Switch */ } from 'react-router-dom';
+import UserSignIn from './components/UserSignIn';
 import UserSignUp from './components/UserSignUp';
-// import UpdateCourse from './components/UpdateCourse';
-// import CreateCourse from './components/CreateCourse';
-import Header from './components/Header';
+import UpdateCourse from './components/UpdateCourse';
+import CreateCourse from './components/CreateCourse';
+import CourseDetail from './components/CourseDetail';
+import UserSignOut from './components/UserSignOut';
+// import Header from './components/Header';
+import Courses from './components/Courses';
 
 class App extends React.Component {
 
@@ -15,7 +19,7 @@ class App extends React.Component {
     fetch('http://localhost:5000/api/courses')
       .then(res => res.json())
       .then(res => {
-        console.log(res);
+        // console.log(res);
         this.setState({
           courses: res,
         })
@@ -23,31 +27,17 @@ class App extends React.Component {
   }
   render () {
     return (
-      <React.Fragment>
-      <Header />
-        {/* <React.Fragment> */}
-          <div>
-            <UserSignUp />
-          </div>
-        {/* </React.Fragment> */}
-      </React.Fragment>
-      // <UserSignIn />
-      // <UserSignUp />
-      // <UpdateCourse />
-      // <CreateCourse />
-
-      // <div>
-      //   {this.state.courses.map((courseObject, index) => 
-      //   <ul key={index}>
-      //     <li className="title">{courseObject.title}</li>
-      //     <li>{courseObject.description}</li>
-      //     {courseObject.estimatedTime ? <li>{courseObject.estimatedTime}</li> : null}
-      //     {courseObject.materialsNeeded ? <li>{courseObject.materialsNeeded}</li> : null}
-      //     <li>Professor: {`${courseObject.User.firstName} ${courseObject.User.lastName}`}</li>
-      //     <li>Email: {courseObject.User.emailAddress}</li>
-      //   </ul>
-      //   )}
-      // </div>
+        <Router>
+          <Switch>
+            <Route exact path="/" component={() => <Courses courseObjects={this.state.courses} />} />
+            <Route exact path="/courses/create" component={CreateCourse} />
+            <Route path="/courses/:id/update" component={UpdateCourse} />
+            <Route exact path="/courses/:id" component={CourseDetail} />
+            <Route path="/signin" component={UserSignIn} />
+            <Route path="/signup" component={UserSignUp} />
+            <Route path="/signout" component={UserSignOut} />
+          </Switch>
+        </Router>
     )
   }
 

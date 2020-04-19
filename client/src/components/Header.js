@@ -2,7 +2,7 @@ import React from 'react';
 
 const Header = (props) => {
   return (
-    <div className="container-fluid bg-primary">
+    <div className="container-fluid sticky-top bg-primary mb-5">
       <div className="row">
         <div className="col-10">
           <h1 className="mt-3">Courses</h1>
