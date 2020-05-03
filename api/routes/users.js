@@ -18,6 +18,7 @@ router.get('/', handler.authenticateUser, handler.asyncHandler(async (req, res) 
 
 router.post('/', handler.asyncHandler(async (req, res) => {
   const user = {};
+  console.log('THIS IS THE REQUEST BODY: ', req.body)
   Object.entries(req.body).forEach((item) => {
     const key = item[0];
     const value = item[1];

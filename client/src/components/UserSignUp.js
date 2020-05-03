@@ -1,27 +1,75 @@
 import React from 'react';
 
 const UserSignUp = (props) => {
+
+  const signUp = () => {
+    fetch('http://localhost:5000/api/users', {
+      method: 'POST',
+      cors: 'cors',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        firstName: 'Brandon',
+        lastName: 'White',
+        emailAddress: 'chldprdgy720@yahoo.com',
+        password: 'Bwhit228'
+      })
+    })
+      .then(res => res.json())
+      .then(data => console.log(data))
+      .catch(err => console.log(err))
+  }
   return (
     <div>
+
+      {/* Header */}
       <div className="header">
         <div className="bounds">
           <h1 className="header--logo">Courses</h1>
-          <nav><a className="signup" href="sign-up.html">Sign Up</a><a className="signin" href="sign-in.html">Sign In</a></nav>
+          <nav>
+            <a className="signup" href="sign-up.html">Sign Up</a>
+            <a className="signin" href="sign-in.html">Sign In</a></nav>
         </div>
       </div>
+
+      {/* Horizontal Line */}
       <hr />
       <div className="bounds">
         <div className="grid-33 centered signin">
           <h1>Sign Up</h1>
           <div>
+            {/* Sign Up Form */}
             <form>
-              <div><input id="firstName" name="firstName" type="text" className="" placeholder="First Name" value="" readOnly /></div>
-              <div><input id="lastName" name="lastName" type="text" className="" placeholder="Last Name" value="" readOnly /></div>
-              <div><input id="emailAddress" name="emailAddress" type="text" className="" placeholder="Email Address" value="" readOnly /></div>
-              <div><input id="password" name="password" type="password" className="" placeholder="Password" value="" readOnly /></div>
-              <div><input id="confirmPassword" name="confirmPassword" type="password" className="" placeholder="Confirm Password"
-                  value="" readOnly /></div>
-              <div className="grid-100 pad-bottom"><button className="button" type="submit">Sign Up</button><button className="button button-secondary" onClick={() => console.log('Form Submits')}>Cancel</button></div>
+              <div>
+                <input id="firstName" name="firstName" type="text" className="" placeholder="First Name" />
+              </div>
+              <div>
+                <input id="lastName" name="lastName" type="text" className="" placeholder="Last Name" />
+              </div>
+              <div>
+                <input id="emailAddress" name="emailAddress" type="text" className="" placeholder="Email Address" />
+              </div>
+              <div>
+                <input id="password" name="password" type="password" className="" placeholder="Password" />
+              </div>
+              <div>
+                <input id="confirmPassword" name="confirmPassword" type="password" className="" placeholder="Confirm Password" />
+              </div>
+              {/* Button Section of Form */}
+              <div className="grid-100 pad-bottom">
+                {/* Submit Button */}
+                <button className="button" 
+                        type="submit"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          signUp();
+                          console.log('Form Submits')
+                        }}>Sign Up
+                </button>
+                {/* Cancel Button */}
+                <a className="button button-secondary" href="/" >Cancel</a>
+              </div>
             </form>
           </div>
           <p>&nbsp;</p>

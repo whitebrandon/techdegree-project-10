@@ -11,7 +11,7 @@ import Courses from './components/Courses';
 
 class App extends React.Component {
 
-  state = {
+  /* state = {
     courses: []
   }
 
@@ -24,12 +24,12 @@ class App extends React.Component {
           courses: res,
         })
       })
-  }
+  } */
   render () {
     return (
         <Router>
           <Switch>
-            <Route exact path="/" component={() => <Courses courseObjects={this.state.courses} />} />
+            <Route exact path="/" component={() => <Courses />} />
             <Route exact path="/courses/create" component={CreateCourse} />
             <Route path="/courses/:id/update" component={UpdateCourse} />
             <Route exact path="/courses/:id" component={CourseDetail} />

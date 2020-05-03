@@ -4,16 +4,26 @@ function CreateCourse () {
 
   return (
     <div>
+      {/* Header */}
       <div className="header">
         <div className="bounds">
           <h1 className="header--logo">Courses</h1>
-          <nav><span>Welcome Joe Smith!</span><a className="signout" href="index.html">Sign Out</a></nav>
+          <nav>
+            <span>Welcome Joe Smith!</span>
+            <a className="signout" href="index.html">Sign Out</a>
+          </nav>
         </div>
       </div>
+
+      {/* Horizontal Line */}
       <hr />
+
+
       <div className="bounds course--detail">
         <h1>Create Course</h1>
         <div>
+          {/* Validation Errors, if present */}
+          { false ?
           <div>
             <h2 className="validation--errors--label">Validation errors</h2>
             <div className="validation-errors">
@@ -23,16 +33,25 @@ function CreateCourse () {
               </ul>
             </div>
           </div>
+          : null
+          }
+
+          {/* Start of Form */}
           <form>
             <div className="grid-66">
               <div className="course--header">
                 <h4 className="course--label">Course</h4>
-                <div><input id="title" name="title" type="text" className="input-title course--title--input" placeholder="Course title..."
-                    value="" readOnly /></div>
+                {/* Course Title */}
+                <div>
+                  <input id="title" name="title" type="text" className="input-title course--title--input" placeholder="Course title..." />
+                </div>
                 <p>By Joe Smith</p>
               </div>
+              {/* Course Description */}
               <div className="course--description">
-                <div><textarea id="description" name="description" className="" placeholder="Course description..."></textarea></div>
+                <div>
+                  <textarea id="description" name="description" className="" placeholder="Course description..."></textarea>
+                </div>
               </div>
             </div>
             <div className="grid-25 grid-right">
@@ -40,17 +59,30 @@ function CreateCourse () {
                 <ul className="course--stats--list">
                   <li className="course--stats--list--item">
                     <h4>Estimated Time</h4>
-                    <div><input id="estimatedTime" name="estimatedTime" type="text" className="course--time--input"
-                        placeholder="Hours" value="" readOnly /></div>
+                    {/* Estimated Time */}
+                    <div>
+                      <input id="estimatedTime" name="estimatedTime" type="text" className="course--time--input" placeholder="Hours" />
+                    </div>
                   </li>
                   <li className="course--stats--list--item">
                     <h4>Materials Needed</h4>
-                    <div><textarea id="materialsNeeded" name="materialsNeeded" className="" placeholder="List materials..."></textarea></div>
+                    {/* Materials Needed */}
+                    <div>
+                      <textarea id="materialsNeeded" name="materialsNeeded" className="" placeholder="List materials..."></textarea>
+                    </div>
                   </li>
                 </ul>
               </div>
             </div>
-            <div className="grid-100 pad-bottom"><button className="button" type="submit">Create Course</button><button className="button button-secondary" onClick={() => console.log('Something Happens Here')}>Cancel</button></div>
+            <div className="grid-100 pad-bottom">
+              <button className="button" 
+                      type="submit"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        console.log('Course Created')
+                      }}>Create Course
+              </button>
+              <a className="button button-secondary" href='/' >Cancel</a></div>
           </form>
         </div>
       </div>
