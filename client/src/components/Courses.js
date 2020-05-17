@@ -7,29 +7,30 @@ class Courses extends React.Component {
   }
 
   componentDidMount () {
-    fetch('http://localhost:5000/api/courses')
-      .then(res => res.json())
-      .then(res => {
-        this.setState({
-          courses: res,
-        })
+    const { context } = this.props;
+    context.data.getAllCourses().then(courses => {
+      this.setState({
+        courses
       })
+    });
   }
 
   render () {
-    return (
-      <div>
-        {/* Header */}
-        <div className="header">
-          <div className="bounds">
-            <h1 className="header--logo">Courses</h1>
-            <nav>
-              <a className="signup" href="sign-up.html">Sign Up</a>
-              <a className="signin" href="sign-in.html">Sign In</a>
-            </nav>
-          </div>
-        </div>
 
+    return (
+      // BELOW IS MY CODE
+      // <div className="row">
+      //     {props.courseObjects.map((courseObject, index) => 
+      //     <div key={index} className="col-sm-4 p-5">
+      //       <div className="card mx-auto border-dark border-1">
+      //         <div className="card-body overflow-auto">
+      //           <h6 className="text-muted">Course</h6>
+      //           <h4 className="title">{courseObject.title}</h4>
+      //         </div>
+      //       </div>
+      //     </div>)}
+      // </div>
+      <div>
         {/* Horizonal Line */}
         <hr />
         
@@ -47,7 +48,7 @@ class Courses extends React.Component {
 
           {/* New Course Link */}
           <div className="grid-33">
-            <a className="course--module course--add--module" href="create-course.html">
+            <a className="course--module course--add--module" href="/courses/create">
               <h3 className="course--add--title">
                 <svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
                   viewBox="0 0 13 13" className="add">
@@ -59,39 +60,8 @@ class Courses extends React.Component {
           </div>
         </div>
       </div>
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      /* <div className="row">
-        {props.courseObjects.map((courseObject, index) => 
-        <div key={index} className="col-sm-4 p-5">
-          <div className="card mx-auto border-dark border-1">
-            <div className="card-body overflow-auto">
-              <h6 className="text-muted">Course</h6>
-              <h4 className="title">{courseObject.title}</h4>
-            </div>
-          </div>
-        </div>)}
-      </div> */
     )
-  }
+  }      
 }
 
 export default Courses;

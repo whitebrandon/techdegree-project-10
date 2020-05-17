@@ -1,43 +1,46 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch, /* Switch */ } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch, } from 'react-router-dom';
 import UserSignIn from './components/UserSignIn';
 import UserSignUp from './components/UserSignUp';
 import UpdateCourse from './components/UpdateCourse';
 import CreateCourse from './components/CreateCourse';
 import CourseDetail from './components/CourseDetail';
 import UserSignOut from './components/UserSignOut';
-// import Header from './components/Header';
+import Header from './components/Header';
 import Courses from './components/Courses';
+
+import withContext from './Context';
+
+// Stateful Class Components
+const CoursesWithContext = withContext(Courses);
+const CourseDetailWithContext = withContext(CourseDetail);
+const UserSignInWithContext = withContext(UserSignIn);
+const UserSignUpWithContext = withContext(UserSignUp);
+const CreateCourseWithContext = withContext(CreateCourse);
+const UpdateCourseWithContext = withContext(UpdateCourse);
+
+// Stateless Functional Components
+const HeaderWithContext = withContext(Header);
+const UserSignOutWithContext = withContext(UserSignOut);
 
 class App extends React.Component {
 
-  /* state = {
-    courses: []
-  }
-
-  componentDidMount () {
-    fetch('http://localhost:5000/api/courses')
-      .then(res => res.json())
-      .then(res => {
-        // console.log(res);
-        this.setState({
-          courses: res,
-        })
-      })
-  } */
   render () {
     return (
-        <Router>
-          <Switch>
-            <Route exact path="/" component={() => <Courses />} />
-            <Route exact path="/courses/create" component={CreateCourse} />
-            <Route path="/courses/:id/update" component={UpdateCourse} />
-            <Route exact path="/courses/:id" component={CourseDetail} />
-            <Route path="/signin" component={UserSignIn} />
-            <Route path="/signup" component={UserSignUp} />
-            <Route path="/signout" component={UserSignOut} />
-          </Switch>
-        </Router>
+      <React.Fragment>
+        <HeaderWithContext />
+          <Router>
+            <Switch>
+              <Route exact path="/" component={CoursesWithContext} />
+              <Route exact path="/courses/create" component={CreateCourseWithContext} />
+              <Route path="/courses/:id/update" component={UpdateCourseWithContext} />
+              <Route exact path="/courses/:id" component={CourseDetailWithContext} />
+              <Route path="/signin" component={UserSignInWithContext} />
+              <Route path="/signup" component={UserSignUpWithContext} />
+              <Route path="/signout" component={UserSignOutWithContext} />
+            </Switch>
+          </Router>
+      </React.Fragment>
     )
   }
 

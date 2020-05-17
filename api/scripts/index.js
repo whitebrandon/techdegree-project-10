@@ -11,17 +11,18 @@ const auth = require('basic-auth');
 const bcryptjs = require('bcryptjs');
 const { User } = require('../models');
 
+/**
+ * Creates an error object for middleware functions
+ * @param {String} errorMsg - the message for the error object
+ * @param {String} errorName - the name of the error
+ */
+const createErrorObj = (errorMsg, errorName) => {
+  const error = new Error(errorMsg);
+  error.name = errorName;
+  throw error;
+}
+
 module.exports = {
-  /**
-   * Creates an error object for middleware functions
-   * @param {String} errorMsg - the message for the error object
-   * @param {String} errorName - the name of the error
-   */
-  createErrorObj: (errorMsg, errorName) => {
-    const error = new Error(errorMsg);
-    error.name = errorName;
-    throw error;
-  },
 
   /**
    * Middleware Function that Authenticates User
@@ -29,6 +30,7 @@ module.exports = {
   authenticateUser: async (req, res, next) => {
     try {
       const user = auth(req);
+      console.log(user);
       if (user && user.name && user.pass) {
         const currentUser = await User.findOne({
           where: { emailAddress: user.name },
@@ -46,21 +48,22 @@ module.exports = {
             });
             next();
           } else {
-            this.createErrorObj('Unauthorized User', 'AuthenticationError');
+            createErrorObj('Unauthorized User', 'AuthenticationError');
           }
         } else {
-          this.createErrorObj('User could not be found with that "emailAddress"', 'User Not Found');
+          createErrorObj('User could not be found', 'User Not Found');
         }
       } else {
-        const err = new Error('Not Authorized.');
-        err.name = 'AuthorizationHeaderError';
-        throw err;
+        createErrorObj('Not Authorized', 'AuthorizationHeaderError')
+        // const err = new Error('Not Authorized.');
+        // err.name = 'AuthorizationHeaderError';
+        // throw err;
       }
     } catch (err) {
       if (err.name === 'AuthorizationHeaderError') {
         return res.status(401).json(err.message);
       }
-      res.status(401).json({ errorMsg: err.message });
+      return res.status(401).json({ errorMsg: err.message });
     }
     return undefined;
   },
@@ -81,16 +84,14 @@ module.exports = {
       } else if (err.name === 'InvalidEmailAddress') {
         res.status(400).json({ errorMsg: err.message });
       } else if (err.name === 'SequelizeUniqueConstraintError') {
-        res.json({
-          errorMsg: 'The email address you\'ve entered has already been registered'
-        });
+        res.status(400).json({ errorMsg: 'The email address you\'ve entered has already been registered' });
       } else if (err.name === 'AuthenticationError') {
         res.status(403).json({ errorMsg: err.message });
       } else if (err.name === 'CourseExistError') {
         res.status(404).json({ errorMsg: err.message });
       } else {
         console.error(err);
-        res.status(500).json(err);
+        res.status(500).json(err.message);
       }
     }
     return undefined;

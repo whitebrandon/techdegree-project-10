@@ -37,6 +37,7 @@ const app = express();
 //                           MIDDLEWARE FUNCTIONS                               //
 // ============================================================================ //
 
+// app.options('*', cors());
 app.use(cors());
 // setup morgan which gives us http request logging
 app.use(morgan('dev'));

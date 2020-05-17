@@ -18,23 +18,29 @@ router.get('/', handler.authenticateUser, handler.asyncHandler(async (req, res) 
 
 router.post('/', handler.asyncHandler(async (req, res) => {
   const user = {};
-  console.log('THIS IS THE REQUEST BODY: ', req.body)
-  Object.entries(req.body).forEach((item) => {
+  Object.entries(req.body).forEach((item, i) => {
     const key = item[0];
     const value = item[1];
     if (key === 'password') {
-      user[key] = bcryptjs.hashSync(value);
+      if (value) {
+        user[key] = bcryptjs.hashSync(value);
+      } else {
+        user[key] = value;
+      }
+    } else if (key === 'emailAddress') {
+      if (value) {
+        if (/^[^@]+@[^@.]+\.[a-z]+$/i.test(value)) {
+          user[key] = value;
+        } else {
+          const error = new Error('Email is invalid. Please try again (ex. person@gmail.com).');
+          error.name = 'InvalidEmailAddress';
+          throw error;
+        }
+      } else {
+        user[key] = value;
+      }
     } else {
       user[key] = value;
-    }
-    if (key === 'emailAddress') {
-      if (/^[^@]+@[^@.]+\.[a-z]+$/i.test(value)) {
-        user[key] = value;
-      } else {
-        const error = new Error('Email is invalid. Please try again (ex. person@gmail.com).');
-        error.name = 'InvalidEmailAddress';
-        throw error;
-      }
     }
   });
   await User.create(user);
