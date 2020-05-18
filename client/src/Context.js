@@ -101,6 +101,7 @@ export class Provider extends React.Component {
 
     Cookie.remove('currentUser');
   }
+
 }
 
 export const Consumer = AppContext.Consumer;

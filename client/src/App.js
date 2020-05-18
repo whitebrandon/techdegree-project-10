@@ -33,10 +33,10 @@ class App extends React.Component {
           <Router>
             <Switch>
               <Route exact path="/" component={CoursesWithContext} />
-              <PrivateRoute exact path="/courses/create" component={CreateCourseWithContext} />
-              <PrivateRoute path="/courses/:id/update" component={UpdateCourseWithContext} />
+              <PrivateRoute exact path="/courses/create" redirect="/signin" component={CreateCourseWithContext} />
+              <PrivateRoute path="/courses/:id/update" redirect="/signin" component={UpdateCourseWithContext} />
               <Route exact path="/courses/:id" component={CourseDetailWithContext} />
-              <Route path="/signin" component={UserSignInWithContext} />
+              <PrivateRoute path="/signin" redirect="/" component={UserSignInWithContext} />
               <Route path="/signup" component={UserSignUpWithContext} />
               <Route path="/signout" component={UserSignOutWithContext} />
             </Switch>
