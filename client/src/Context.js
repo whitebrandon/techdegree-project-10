@@ -16,6 +16,26 @@ export class Provider extends React.Component {
     errors: null
   }
 
+  render() {
+
+    const value = {
+      data: this.data,
+      user: this.state.authenticatedUser,
+      errors: this.state.errors,
+      actions: {
+        signIn: this.signIn,
+        signOut: this.signOut,
+        signUp: this.signUp
+      }
+    };
+    
+    return (
+      <AppContext.Provider value={value}>
+        {this.props.children}
+      </AppContext.Provider>  
+    );
+  }
+
   signUp = async (user) => {
     const response = await this.data.createUser(user);
     if (typeof response === 'object') {
@@ -80,26 +100,6 @@ export class Provider extends React.Component {
     })
 
     Cookie.remove('currentUser');
-  }
-
-  render() {
-
-    const value = {
-      data: this.data,
-      user: this.state.authenticatedUser,
-      errors: this.state.errors,
-      actions: {
-        signIn: this.signIn,
-        signOut: this.signOut,
-        signUp: this.signUp
-      }
-    };
-    
-    return (
-      <AppContext.Provider value={value}>
-        {this.props.children}
-      </AppContext.Provider>  
-    );
   }
 }
 
