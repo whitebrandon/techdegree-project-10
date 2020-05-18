@@ -116,7 +116,7 @@ class CreateCourse extends React.Component {
                   <div>
                     <input id="title" name="title" type="text" className="input-title course--title--input" ref={input => this.title = input} placeholder="Course title..." defaultValue="" />
                   </div>
-                  <p>By {`${context.user.firstName} ${context.user.lastName}`}</p>
+                  <p>By {context.user ? `${context.user.firstName} ${context.user.lastName}` : null }</p>
                 </div>
                 {/* Course Description */}
                 <div className="course--description">

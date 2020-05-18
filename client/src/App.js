@@ -10,6 +10,7 @@ import Header from './components/Header';
 import Courses from './components/Courses';
 
 import withContext from './Context';
+import PrivateRoute from './PrivateRoute';
 
 // Stateful Class Components
 const CoursesWithContext = withContext(Courses);
@@ -32,8 +33,8 @@ class App extends React.Component {
           <Router>
             <Switch>
               <Route exact path="/" component={CoursesWithContext} />
-              <Route exact path="/courses/create" component={CreateCourseWithContext} />
-              <Route path="/courses/:id/update" component={UpdateCourseWithContext} />
+              <PrivateRoute exact path="/courses/create" component={CreateCourseWithContext} />
+              <PrivateRoute path="/courses/:id/update" component={UpdateCourseWithContext} />
               <Route exact path="/courses/:id" component={CourseDetailWithContext} />
               <Route path="/signin" component={UserSignInWithContext} />
               <Route path="/signup" component={UserSignUpWithContext} />
@@ -42,6 +43,15 @@ class App extends React.Component {
           </Router>
       </React.Fragment>
     )
+    /* export default function PrivateRoute ({component: Component, ...rest}) {
+    //   return (
+    //     <Consumer>
+    //       {context => (
+    //         <Route {...rest} render={props => context.user ? <Component {...props} /> : <Redirect to="/signin" /> } />
+    //       )}
+    //     </Consumer>
+    //   )  
+    // } */
   }
 
 }
