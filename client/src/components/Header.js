@@ -19,7 +19,7 @@ const Header = (props) => {
       {props.context.user ?
         <div className="header">
           <div className="bounds">
-            <h1 className="header--logo">Courses</h1>
+            <h1 className="header--logo"><a href="/" style={{ textDecoration: 'none' }}>Courses</a></h1>
             <nav>
               <span>{`Welcome, ${user.firstName + " " + user.lastName}!`}</span>
               <a className="signout" href="/signout">Sign Out</a>

@@ -25,13 +25,12 @@ export default class Data {
     if (response.status === 200) {
       return response.json()
     } else {
-      throw new Error();
+      throw new Error('Sorry. Something went wrong!');
     }
   }
 
   getCourse = async (courseId) => {
-    const course = await this.api(`/courses/${courseId}`).then(res => res.json());
-    return course
+    return await this.api(`/courses/${courseId}`).then(res => res.json());
   } 
 
   // Below is for Sign In

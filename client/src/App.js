@@ -9,6 +9,10 @@ import UserSignOut from './components/UserSignOut';
 import Header from './components/Header';
 import Courses from './components/Courses';
 
+import NotFound from './components/NotFound';
+import Forbidden from './components/Forbidden';
+import UnhandledError from './components/UnhandledError';
+
 import withContext from './Context';
 import PrivateRoute from './PrivateRoute';
 
@@ -39,6 +43,10 @@ class App extends React.Component {
               <PrivateRoute path="/signin" redirect="/" component={UserSignInWithContext} />
               <Route path="/signup" component={UserSignUpWithContext} />
               <Route path="/signout" component={UserSignOutWithContext} />
+              <Route path="/notfound" component={NotFound} />
+              <Route path="/forbidden" component={Forbidden} />
+              <Route path="/error" component={UnhandledError} />
+              <Route component={NotFound} />
             </Switch>
           </Router>
       </React.Fragment>

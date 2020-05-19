@@ -23,7 +23,6 @@ class UserSignIn extends React.Component /* (props) => */ {
     evt.preventDefault();
     const { context } = this.props;
     context.actions.signIn(this.state.email, this.state.password)
-      .then(() => this.props.history.push('/') )
   }
 
   render () {    
@@ -48,6 +47,12 @@ class UserSignIn extends React.Component /* (props) => */ {
                 <div>
                   <input id="password" name="password" type="password" className="" placeholder="Password" onChange={this.handlePasswordChange} />
                 </div>
+                { this.props.context.errors ?
+                <div>
+                  <p style={{color: "red", textAlign: "center"}}>Error: Your login is invalid. Please try again. </p>
+                </div>
+                : null
+                }
                 {/* Button Section of Form */}
                 <div className="grid-100 pad-bottom">
                   {/* Submit Button */}

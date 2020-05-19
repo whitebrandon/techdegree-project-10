@@ -1,23 +1,38 @@
 import React from 'react';
+import { Redirect } from 'react-router-dom';
+
+// Need to do something about isMounted and _isMounted being named so similarly
 
 export default class UpdateCourse extends React.Component {
   
   state = {
       course: this.props.location.state ? this.props.location.state.course : null,
       isMounted: false,
-      errors: null
+      errors: null,
+      wasCourseReturned: true
   }
 
+  _isMounted = false;
+
   async componentDidMount () {
+
+    this._isMounted = true;
+
     if (!this.state.course) {
       const course = await this.props.context.data.getCourse(parseInt(this.props.match.params.id)).then(data => data);
-      this.setState(() => {
-        return {
-          course,
-          isMounted: true
-        }
-      })
+      if (this._isMounted) {
+        this.setState(() => {
+          return {
+            course,
+            isMounted: true
+          }
+        })
+      }
     }
+  }
+
+  componentWillUnmount () {
+    this._isMounted = false;
   }
 
   handleSubmit = (evt) => {
@@ -87,106 +102,110 @@ export default class UpdateCourse extends React.Component {
       //   <button type="submit" classNameName="btn btn-primary rounded">Update Course</button>
       //   <button type="submit" classNameName="btn btn-secondary rounded">Cancel</button>
       // </form>
-      <div>
-        {/* Horizontal Line */}
-        <hr />
-
-        { this.state.course 
-        ?
-        <div className="bounds course--detail">
-          <h1>Update Course</h1>
+      <React.Fragment>
+        {this.state.wasCourseReturned ?
           <div>
-          {/* Validation Errors, if present */}
-          { errors ?
-            <div>
-              <h2 className="validation--errors--label">Validation errors</h2>
-              <div className="validation-errors">
-                <ul>
-                  {errors.map((error, index) => <li key={index}>{error.replace('title', 'Course Title').replace('description', 'Course Description')}</li>)}
-                  {/* <li>Please provide a value for "Title"</li>
-                  <li>Please provide a value for "Description"</li> */}
-                </ul>
-              </div>
-            </div>
-            : null
-            }
-            <form onSubmit={this.handleSubmit}>
-              <div className="grid-66">
-                <div className="course--header">
-                  <h4 className="course--label">Course</h4>
-                  {/* Course Title */}
-                  <div>
-                    <input id="title"
-                           name="title" 
-                           type="text"
-                           ref={input => this.title = input} 
-                           className="input-title course--title--input" 
-                           placeholder="Course title..." 
-                           defaultValue={this.state.course.title} 
-                    />
-                  </div>
-                  {/* Course Author */}
-                  <p>By {`${this.state.course.User.firstName} ${this.state.course.User.lastName}`}</p>
-                </div>
-                {/* Course Description */}
-                <div className="course--description">
-                  <div>
-                    <textarea id="description"
-                              name="description"
-                              ref={input => this.description = input} 
-                              className="" 
-                              defaultValue={this.state.course.description} 
-                              placeholder="Course description..."
-                    ></textarea>
+            {/* Horizontal Line */}
+            <hr />
+
+            { this.state.course 
+            ?
+            <div className="bounds course--detail">
+              <h1>Update Course</h1>
+              <div>
+              {/* Validation Errors, if present */}
+              { errors ?
+                <div>
+                  <h2 className="validation--errors--label">Validation errors</h2>
+                  <div className="validation-errors">
+                    <ul>
+                      {errors.map((error, index) => <li key={index}>{error.replace('title', 'Course Title').replace('description', 'Course Description')}</li>)}
+                      {/* <li>Please provide a value for "Title"</li>
+                      <li>Please provide a value for "Description"</li> */}
+                    </ul>
                   </div>
                 </div>
-              </div>
-              <div className="grid-25 grid-right">
-                <div className="course--stats">
-                  <ul className="course--stats--list">
-                    <li className="course--stats--list--item">
-                      <h4>Estimated Time</h4>
-                      {/* Estimated Time */}
+                : null
+                }
+                <form onSubmit={this.handleSubmit}>
+                  <div className="grid-66">
+                    <div className="course--header">
+                      <h4 className="course--label">Course</h4>
+                      {/* Course Title */}
                       <div>
-                        <input id="estimatedTime" 
-                               name="estimatedTime" 
-                               type="text" 
-                               ref={input => this.estimatedTime = input}
-                               className="course--time--input" 
-                               placeholder="Hours" 
-                               defaultValue={this.state.course.estimatedTime} 
+                        <input id="title"
+                              name="title" 
+                              type="text"
+                              ref={input => this.title = input} 
+                              className="input-title course--title--input" 
+                              placeholder="Course title..." 
+                              defaultValue={this.state.course.title} 
                         />
                       </div>
-                    </li>
-                    <li className="course--stats--list--item">
-                      <h4>Materials Needed</h4>
-                      {/* Materials Needed */}
+                      {/* Course Author */}
+                      <p>By {`${this.state.course.User.firstName} ${this.state.course.User.lastName}`}</p>
+                    </div>
+                    {/* Course Description */}
+                    <div className="course--description">
                       <div>
-                        <textarea id="materialsNeeded" 
-                                  name="materialsNeeded" 
-                                  ref={input => this.materialsNeeded = input}
+                        <textarea id="description"
+                                  name="description"
+                                  ref={input => this.description = input} 
                                   className="" 
-                                  defaultValue={this.state.course.materialsNeeded} 
-                                  placeholder="List materials..."
+                                  defaultValue={this.state.course.description} 
+                                  placeholder="Course description..."
                         ></textarea>
                       </div>
-                    </li>
-                  </ul>
-                </div>
+                    </div>
+                  </div>
+                  <div className="grid-25 grid-right">
+                    <div className="course--stats">
+                      <ul className="course--stats--list">
+                        <li className="course--stats--list--item">
+                          <h4>Estimated Time</h4>
+                          {/* Estimated Time */}
+                          <div>
+                            <input id="estimatedTime" 
+                                  name="estimatedTime" 
+                                  type="text" 
+                                  ref={input => this.estimatedTime = input}
+                                  className="course--time--input" 
+                                  placeholder="Hours" 
+                                  defaultValue={this.state.course.estimatedTime} 
+                            />
+                          </div>
+                        </li>
+                        <li className="course--stats--list--item">
+                          <h4>Materials Needed</h4>
+                          {/* Materials Needed */}
+                          <div>
+                            <textarea id="materialsNeeded" 
+                                      name="materialsNeeded" 
+                                      ref={input => this.materialsNeeded = input}
+                                      className="" 
+                                      defaultValue={this.state.course.materialsNeeded} 
+                                      placeholder="List materials..."
+                            ></textarea>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  {/* Button Section of Form */}
+                  <div className="grid-100 pad-bottom">
+                    {/* Updated Course Button */}
+                    <button className="button" type="submit">Update Course</button>
+                    {/* Cancel Button */}
+                    <a className="button button-secondary" href='/' >Cancel</a>
+                  </div>
+                </form>
               </div>
-              {/* Button Section of Form */}
-              <div className="grid-100 pad-bottom">
-                {/* Updated Course Button */}
-                <button className="button" type="submit">Update Course</button>
-                {/* Cancel Button */}
-                <a className="button button-secondary" href='/' >Cancel</a>
-              </div>
-            </form>
+            </div>
+            : 
+            this.state.isMounted && !this.state.course ? this.props.history.push('/') : null}
           </div>
-        </div>
-        : 
-        this.state.isMounted && !this.state.course ? this.props.history.push('/') : null}
-      </div>
+          : <Redirect to="/notfound" /> }
+      </React.Fragment>
     )
   }
 }

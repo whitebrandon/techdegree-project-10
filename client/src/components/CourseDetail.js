@@ -1,22 +1,68 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 
 export default class CourseDetail extends React.Component {
 
   state = {
     course: null,
+    wasCourseReturned: true,
+    error: null
   }
 
+  _isMounted = false;
+
   componentDidMount () {
+    this._isMounted = true;
+
     const { context } = this.props;
     const { id } = this.props.match.params;
     context.data.getCourse(id)
-      .then(res => this.setState(() => {
-        return {
-          course: res
+      .then(res => {
+        if (res) {
+          return res
+        } else {
+          throw new Error('No Course Was Found')
         }
-      }))
+      })
+      .then(course => {
+        if (this._isMounted) {
+          this.setState(() => {
+            return {
+              course,
+              wasCourseReturned: true,
+              error: null
+            }
+          })
+        }
+      })
+      .catch(error => {
+        if (error.message === 'No Course Was Found') {
+          console.error(`${error} for course id: ${id}`);
+          if (this._isMounted) {
+            this.setState(() => {
+              return {
+                error,
+                wasCourseReturned: false
+              }
+            })
+          }
+        } else {
+          console.error(error)
+          if (this._isMounted) {
+            this.setState(() => {
+              return {
+                error: 'Unknown Error',
+                wasCourseReturned: false
+              }
+            })
+          }
+        }
+      })
+  }
+
+  componentWillUnmount () {
+    this._isMounted = false;
   }
 
   handleDelete = (evt) => {
@@ -36,7 +82,9 @@ export default class CourseDetail extends React.Component {
     const { course } = this.state;
     return (
       <React.Fragment>
-      {this.state.course ?  
+      {this.state.wasCourseReturned ?
+      this.state.error !== 'Unknown Error' ?
+      this.state.course ?  
         <div>
           {/* Horizontal Line */}
           <hr />
@@ -101,7 +149,8 @@ export default class CourseDetail extends React.Component {
         </div>
          :
         null
-        }
+        : <Redirect to="/error" />
+       : <Redirect to="/notfound" />}
       </React.Fragment>
     )
   }
