@@ -1,18 +1,28 @@
 import React from 'react';
+import { Redirect } from 'react-router-dom';
 
 class Courses extends React.Component {
 
   state = {
-    courses: []
+    courses: [],
+    error: null
   }
 
   componentDidMount () {
     const { context } = this.props;
-    context.data.getAllCourses().then(courses => {
-      this.setState({
-        courses
+    context.data.getAllCourses()
+      .then(courses => {
+        this.setState({
+          courses
+        })
       })
-    });
+      .catch(err => {
+        this.setState(() => {
+          return {
+            error: err
+          }
+        })
+      });
   }
 
   render () {
@@ -30,6 +40,8 @@ class Courses extends React.Component {
       //       </div>
       //     </div>)}
       // </div>
+      <React.Fragment>
+      {!this.state.error ? 
       <div>
         {/* Horizonal Line */}
         <hr />
@@ -60,6 +72,8 @@ class Courses extends React.Component {
           </div>
         </div>
       </div>
+      : <Redirect to="/error" />}
+      </React.Fragment>
     )
   }      
 }

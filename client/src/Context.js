@@ -82,6 +82,7 @@ export class Provider extends React.Component {
       Cookie.set('currentUser', user);
     } else {
       error = await response.json().then(data => data)
+      console.log(error)
       this.setState(() => {
         return {
           errors: error
