@@ -36,6 +36,11 @@ export class Provider extends React.Component {
     );
   }
 
+  /**
+   * sends request to api to add new user to db,
+   * then calls signIn to log new user into app
+   * @param {Object} user
+   */
   signUp = async (user) => {
     const response = await this.data.createUser(user);
     if (typeof response === 'object') {
@@ -68,6 +73,13 @@ export class Provider extends React.Component {
     return response;
   }
 
+  /**
+   * sends request to api for user
+   * and either persists the user into global state
+   * or updates the errors state
+   * @param {String} emailAddress
+   * @param {String} password
+   */
   signIn = async (emailAddress, password) => {
     const response = await this.data.getUser(emailAddress, password);
     let user, error;
@@ -92,6 +104,9 @@ export class Provider extends React.Component {
     return user
   }
 
+  /**
+   * clears cookies and user from global state
+   */
   signOut = () => {
 
     this.setState(() => {
@@ -109,7 +124,7 @@ export const Consumer = AppContext.Consumer;
 
 /**
  * A higher-order component that wraps the provided component in a Context Consumer component.
- * @param {class} Component - A React component.
+ * @param {class} WrappedComponent - A React component.
  * @returns {function} A higher-order component.
  */
 

@@ -5,10 +5,17 @@ export default function UserSignOut (props) {
 
   const signOutDiv = React.useRef()
 
+  /**
+   * signs out the user
+   */
   const handleSignOut = () => {
     props.context.actions.signOut();
   }
 
+  /**
+   * after component is rendered,
+   * a click is sent to div, which calls handleSignOut
+   */
   React.useEffect(() => {
     signOutDiv.current.click()
   });

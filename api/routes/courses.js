@@ -75,6 +75,9 @@ router.get('/:id', handler.asyncHandler(async (req, res) => {
       exclude: ['createdAt', 'updatedAt'],
     }
   });
+  if (!course) {
+    createCourseNotFoundError();
+  }
   return res.status(200).json(course);
 }));
 

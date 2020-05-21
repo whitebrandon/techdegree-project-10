@@ -16,26 +16,22 @@ const Header = (props) => {
     //   </div>
     // </div>
     <React.Fragment>
-      {props.context.user ?
         <div className="header">
           <div className="bounds">
             <h1 className="header--logo"><a href="/" style={{ textDecoration: 'none' }}>Courses</a></h1>
-            <nav>
-              <span>{`Welcome, ${user.firstName + " " + user.lastName}!`}</span>
-              <a className="signout" href="/signout">Sign Out</a>
-            </nav>
+            {user ? // if user signed in, display name and "sign out" btn
+              <nav>
+                <span>{`Welcome, ${user.firstName + " " + user.lastName}!`}</span>
+                <a className="signout" href="/signout">Sign Out</a>
+              </nav>
+            : // otherwise, display "sign up" and "sign in" btn
+              <nav>
+                <a className="signup" href="/signup">Sign Up</a>
+                <a className="signin" href="/signin">Sign In</a>
+              </nav>
+            }
           </div>
         </div>
-        :
-        <div className="header">
-          <div className="bounds">
-            <h1 className="header--logo">Courses</h1>
-            <nav>
-              <a className="signup" href="/signup">Sign Up</a>
-              <a className="signin" href="/signin">Sign In</a></nav>
-          </div>
-        </div>
-      }
     </React.Fragment>
   )
 }

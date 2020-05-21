@@ -6,10 +6,13 @@ export default function PrivateRoute ({component: Component, ...rest}) {
   return (
     <Consumer>
       {context => (
-        rest.path !== '/signin' ?
-        <Route {...rest} render={(props) => context.user ? <Component {...props} /> : <Redirect to={rest.redirect} /> } />
-        :
+        rest.path === '/signin' ?
         <Route {...rest} render={(props) => context.user ? <Redirect to={rest.redirect} /> : <Component {...props} /> } />
+        :
+        rest.path === '/signup' ?
+        <Route {...rest} render={(props) => context.user ? <Redirect to={rest.redirect} /> : <Component {...props} /> } />
+        :
+        <Route {...rest} render={(props) => context.user ? <Component {...props} /> : <Redirect to={rest.redirect} /> } />
       )}
     </Consumer>
   )  

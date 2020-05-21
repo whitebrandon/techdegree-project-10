@@ -6,6 +6,10 @@ class UserSignUp extends React.Component {
     warnings: null
   }
 
+  /**
+   * 
+   * @param {Event} evt
+   */
   handleSubmit = (evt) => {
     evt.preventDefault();
     this.setState(() => {
