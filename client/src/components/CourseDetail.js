@@ -1,156 +1,138 @@
 import React from 'react';
-import { Link, Redirect } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
+import ButtonContainer from './ButtonContainer';
 
 export default class CourseDetail extends React.Component {
 
   state = {
     course: null,
-    wasCourseReturned: true,
     error: null
   }
 
-  _isMounted = false;
 
   componentDidMount () {
-    this._isMounted = true;
-
-    const { context } = this.props;
+    const { getCourse } = this.props.context.data;
     const { id } = this.props.match.params;
-    context.data.getCourse(id)
-      .then(res => {
-        if (res) {
-          return res
-        } else {
-          throw new Error('No Course Was Found')
-        }
-      })
-      .then(course => {
-        if (this._isMounted) {
+
+    getCourse(id)
+      .then(async res => {
+        if (res.status === 200) {
+          const course = await res.json().then(data => data);
           this.setState(() => {
             return {
               course,
-              wasCourseReturned: true,
               error: null
             }
           })
+        } else {
+          this.setState(() => {
+            return {
+              course: null,
+              error: res
+            }
+          })
+          console.error(`${res.statusText} for course id: ${id}`);
         }
-      })
+      }) // ↓ Catches server errors (i.e. 500 series)
       .catch(error => {
-        if (error.message === 'No Course Was Found') {
-          console.error(`${error} for course id: ${id}`);
-          if (this._isMounted) {
             this.setState(() => {
               return {
                 error,
-                wasCourseReturned: false
               }
             })
-          }
-        } else {
-          console.error(error)
-          if (this._isMounted) {
-            this.setState(() => {
-              return {
-                error: 'Unknown Error',
-                wasCourseReturned: false
-              }
-            })
-          }
-        }
       })
   }
 
-  componentWillUnmount () {
-    this._isMounted = false;
-  }
-
+  /**
+   * When "delete" btn is clicked, sends
+   * req to api to remove course
+   */
   handleDelete = (evt) => {
+    evt.preventDefault();
+
     const { deleteCourse } = this.props.context.data;
     const { id } = this.state.course;
     const { emailAddress, password} = this.props.context.user;
+
     deleteCourse(id, emailAddress, password)
       .then(res => {
-        if (res !== null) {
-          console.log(res)
-        }
+          if (res.status !== 204) {
+            this.setState(() => {
+              return {
+                error: res
+              }
+            })
+          } else {
+            this.setState(() => {
+              return {
+                error: null
+              }
+            })
+            this.props.history.push("/")
+          }
       })
   }
 
   render () {
     const { user } = this.props.context;
-    const { course } = this.state;
+    const { course, error } = this.state;
     return (
       <React.Fragment>
-      {this.state.wasCourseReturned ?
-      this.state.error !== 'Unknown Error' ?
-      this.state.course ?  
+      {!error && course ? // ← if no errors and course available, render component
         <div>
-          {/* Horizontal Line */}
           <hr />
           <div>
-            {/* Section that holds Update Course, Delete Course, and Return to List buttons */}
-            <div className="actions--bar">
-              <div className="bounds">
-                <div className="grid-100">
-                { user && user.id === course.userId ?
-                  <span>
-                    {/* Update Button */}
-                    <Link className="button" to={{ pathname: `/courses/${this.state.course.id}/update`, state: { course: this.state.course }}}>Update Course</Link>
-                    {/* Delete Button */}
-                    <a className="button"
-                      href='/'
-                      onClick={this.handleDelete}>Delete Course
-                    </a>
-                  </span> :
-                  null }
-                  {/* Home Button */}
-                  <a className="button button-secondary" href="/">Return to List</a>
-                </div>
-              </div>
-            </div>
+            <ButtonContainer user={user} course={course} deleteCourse={this.handleDelete} />
             <div className="bounds course--detail">
               <div className="grid-66">
+              {/* ==================== COURSE TITLE ==================== */}
                 <div className="course--header">
                   <h4 className="course--label">Course</h4>
-                  {/* Course Title */}
-                  <h3 className="course--title">{this.state.course.title}</h3>
-                  {/* Course Author */}
-                  <p>By {this.state.course.User.firstName + " " + this.state.course.User.lastName}</p>
+                  <h3 className="course--title">{course.title}</h3>
+                  <p>By {course.User.firstName + " " + course.User.lastName}</p>
                 </div>
-                {/* Course Description */}
+              {/* ================= COURSE DESCRIPTION ================= */}
                 <div className="course--description">
-                  <ReactMarkdown source={this.state.course.description} />
+                  <ReactMarkdown source={course.description} />
                 </div>
+              {/* ====================================================== */}
               </div>
               <div className="grid-25 grid-right">
                 <div className="course--stats">
                   <ul className="course--stats--list">
+                  {/* ================= ESTIMATED TIME ================= */}
                     <li className="course--stats--list--item">
                       <h4>Estimated Time</h4>
-                      {/* Course Estimated Time */}
-                      <h3>{this.state.course.estimatedTime}</h3>
+                      <h3>{course.estimatedTime}</h3>
                     </li>
+                  {/* ================ MATERIALS NEEDED ================ */}
                     <li className="course--stats--list--item">
                       <h4>Materials Needed</h4>
-                        {this.state.course.materialsNeeded ?
-                          <ul> 
-                          {/* Course Materials Needed */}
-                          {this.state.course.materialsNeeded.split('*').map((materials, index) => index === 0 ? null : 
-                            <li key={index}><ReactMarkdown source={materials} /></li>)}
-                        </ul> :
-                        null }
+                      {course.materialsNeeded ? // if materialsNeeded NOT empty, list materials
+                        <ul> 
+                          <li style={{listStyle:"none"}}><ReactMarkdown source={course.materialsNeeded} /></li>
+                        </ul> 
+                      : // otherwise, return null
+                        null
+                      }
                     </li>
+                  {/* ================================================== */}
                   </ul>
                 </div>
               </div>
+              {/* =================== END CONTAINER ==================== */}
             </div>
           </div>
         </div>
-         :
+      : 
+      !error && !course ? // ← if no errors and no course, return null
         null
-        : <Redirect to="/error" />
-       : <Redirect to="/notfound" />}
+      : error.status === 404 ? // ← if error is Not Found error, redirect to /notfound
+        <Redirect to="/notfound" />
+      :
+        <Redirect to="/error" /> // otherwise redirect to /error
+      } 
       </React.Fragment>
     )
   }

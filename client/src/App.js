@@ -41,7 +41,7 @@ class App extends React.Component {
               <PrivateRoute path="/courses/:id/update" redirect="/signin" component={UpdateCourseWithContext} />
               <Route exact path="/courses/:id" component={CourseDetailWithContext} />
               <PrivateRoute path="/signin" redirect="/" component={UserSignInWithContext} />
-              <Route path="/signup" component={UserSignUpWithContext} />
+              <PrivateRoute path="/signup" redirect="/" component={UserSignUpWithContext} />
               <Route path="/signout" component={UserSignOutWithContext} />
               <Route path="/notfound" component={NotFound} />
               <Route path="/forbidden" component={Forbidden} />

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
+import CourseCard from './CourseCard';
 
 class Courses extends React.Component {
 
@@ -8,18 +9,24 @@ class Courses extends React.Component {
     error: null
   }
 
+  /**
+   * on mount, gets all courses and rerenders component
+   */
   componentDidMount () {
-    const { context } = this.props;
-    context.data.getAllCourses()
+    const { getAllCourses } = this.props.context.data;
+    
+    getAllCourses()
       .then(courses => {
         this.setState({
-          courses
+          courses,
+          error: null
         })
       })
       .catch(err => {
         this.setState(() => {
           return {
-            error: err
+            error: err,
+            courses: []
           }
         })
       });
@@ -41,38 +48,34 @@ class Courses extends React.Component {
       //     </div>)}
       // </div>
       <React.Fragment>
-      {!this.state.error ? 
-      <div>
-        {/* Horizonal Line */}
-        <hr />
-        
-        {/* ================= COURSES =============== */}
-        <div className="bounds">
-          {/* Current Courses */}
-          {this.state.courses.map(course => 
-            <div className="grid-33" key={course.id}>
-              <a className="course--module course--link" href={`courses/${course.id}`}>
-                <h4 className="course--label">Course</h4>
-                <h3 className="course--title">{course.title}</h3>
-              </a>
-            </div>
-          )}
+        {!this.state.error ? // if no error, render component
+          <div>
+          <hr />
+            <div className="bounds">
 
-          {/* New Course Link */}
-          <div className="grid-33">
-            <a className="course--module course--add--module" href="/courses/create">
-              <h3 className="course--add--title">
-                <svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
-                  viewBox="0 0 13 13" className="add">
-                  <polygon points="7,6 7,0 6,0 6,6 0,6 0,7 6,7 6,13 7,13 7,7 13,7 13,6 "></polygon>
-                </svg>
-                New Course
-              </h3>
-            </a>
+            {/* ================= COURSE CARD =============== */}
+              {/* Current Courses */}
+              {this.state.courses.map(course =>
+                <CourseCard key={course.id} course={course} />
+              )}
+
+              {/* ================= NEW COURSE CARD =============== */}
+              <div className="grid-33">
+                <a className="course--module course--add--module" href="/courses/create">
+                  <h3 className="course--add--title">
+                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 13 13" className="add">
+                      <polygon points="7,6 7,0 6,0 6,6 0,6 0,7 6,7 6,13 7,13 7,7 13,7 13,6 "></polygon>
+                    </svg>
+                    New Course
+                  </h3>
+                </a>
+              </div>
+              
+            </div>
           </div>
-        </div>
-      </div>
-      : <Redirect to="/error" />}
+        : // ↓ if error, redirect to /error
+          <Redirect to="/error" />
+        }
       </React.Fragment>
     )
   }      
