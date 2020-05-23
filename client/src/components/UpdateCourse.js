@@ -1,36 +1,27 @@
 import React from 'react';
-import { Redirect } from 'react-router-dom';
-
-// Need to do something about isMounted and _isMounted being named so similarly
+import { Redirect, Link } from 'react-router-dom';
 
 export default class UpdateCourse extends React.Component {
   
   state = {
       course: this.props.location.state ? this.props.location.state.course : null,
-      isMounted: false,
       errors: null,
-      wasCourseReturned: true
   }
 
-  //_isMounted = false;
-
   async componentDidMount () {
-
+  
     const { course } = this.state;
     const { getCourse } = this.props.context.data;
     const { id } = this.props.match.params;
 
-    //this._isMounted = true;
-
     if (!course) {
       const response = await getCourse(parseInt(id));
       if (response.status === 200) {
-        //if (this._isMounted)
-        this.setState(async () => {
+        const course = await response.json().then(data => data)
+        this.setState(() => {
           return {
-            course: await response.json().then(data => data),
+            course,
             errors: null
-           // isMounted: true
           }
         })
       } else {
@@ -44,33 +35,35 @@ export default class UpdateCourse extends React.Component {
     }
   }
 
-  // componentWillUnmount () {
-  //   this._isMounted = false;
-  // }
-
   /**
-   * 
+   * creates object and sends req to api
+   * to update course
    * @param {Event} evt
    */
   handleSubmit = (evt) => {
     evt.preventDefault();
+
     const { user } = this.props.context;
     const { updateCourse } = this.props.context.data;
     const { title, description, estimatedTime, materialsNeeded} = this;
+
     const course = {
       title: title.value,
       description: description.value,
       estimatedTime: estimatedTime.value,
       materialsNeeded: materialsNeeded.value
     }
+
     course.id = this.state.course.id
+
     updateCourse(course, user.emailAddress, user.password)
       .then(async res => {
         if (res.status !== 204) {
-          const errors = await res.json().then(data => data).then(errorObject => errorObject.errorMsg);
+          const errors = res // await res.json().then(data => data).then(errorObject => errorObject.errorMsg);
+          console.log(errors)
           this.setState( () => {
             return {
-              errors
+              errors,
             }
           })
         } else {
@@ -188,7 +181,7 @@ export default class UpdateCourse extends React.Component {
                 </div>
                 <div className="grid-100 pad-bottom">
                   <button className="button" type="submit">Update Course</button>
-                  <a className="button button-secondary" href='/' >Cancel</a>
+                  <Link className="button button-secondary" to='/' >Cancel</Link>
                 </div>
               </form>
             </div>
@@ -196,7 +189,7 @@ export default class UpdateCourse extends React.Component {
         </div>
       : !course && !errors ?
         null
-      : !course && errors.status === 403 ?
+      : errors.status === 403 ?
         <Redirect to="/forbidden" />
       : !course && errors.status === 404 ?
         <Redirect to="/notfound" /> 

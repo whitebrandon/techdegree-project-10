@@ -12,14 +12,14 @@ export default function ButtonContainer (props) {
               {/* Update Button */}
               <Link className="button" to={{ pathname: `/courses/${props.course.id}/update`, state: { course: props.course }}}>Update Course</Link>
               {/* Delete Button */}
-              <a className="button"
-              href='/'
+              <Link className="button"
+              to='/'
               onClick={props.deleteCourse}>Delete Course
-              </a>
+              </Link>
           </span> :
           null }
           {/* Home Button */}
-          <a className="button button-secondary" href="/">Return to List</a>
+          <Link className="button button-secondary" to="/">Return to List</Link>
           </div>
         </div>
       </div>
