@@ -1,5 +1,5 @@
 import React from 'react';
-import { Redirect } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
 
 class CreateCourse extends React.Component {
 
@@ -173,7 +173,7 @@ class CreateCourse extends React.Component {
               </div>
               <div className="grid-100 pad-bottom">
                 <button className="button" type="submit">Create Course</button>
-                <a className="button button-secondary" href='/' >Cancel</a>
+                <Link className="button button-secondary" to='/' >Cancel</Link>
               </div>
             </form>
           </div>

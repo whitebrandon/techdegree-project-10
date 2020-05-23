@@ -1,39 +1,55 @@
 import React from 'react';
-import { Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import CourseCard from './CourseCard';
 
 class Courses extends React.Component {
+  constructor () {
+    super();
+    this._isMounted = null;
+  }
 
   state = {
     courses: [],
-    error: null
+    error: null,
   }
 
   /**
    * on mount, gets all courses and rerenders component
    */
   componentDidMount () {
+    console.log('Courses mounted')
+    this._isMounted = true;
     const { getAllCourses } = this.props.context.data;
     
     getAllCourses()
-      .then(courses => {
-        this.setState({
-          courses,
-          error: null
+    .then(courses => {
+      if(this._isMounted) {
+        this.setState(() => {
+          return {
+            courses,
+            error: null
+          }
         })
-      })
-      .catch(err => {
+      }
+    })
+    .catch(err => {
+      if(this._isMounted) {
         this.setState(() => {
           return {
             error: err,
             courses: []
           }
         })
-      });
+      }
+    });
+  }
+
+  componentWillUnmount () {
+    console.log('Course unmounted')
+    this._isMounted = false;
   }
 
   render () {
-
     return (
       // BELOW IS MY CODE
       // <div className="row">
@@ -61,20 +77,20 @@ class Courses extends React.Component {
 
               {/* ================= NEW COURSE CARD =============== */}
               <div className="grid-33">
-                <a className="course--module course--add--module" href="/courses/create">
+                <Link className="course--module course--add--module" to="/courses/create">
                   <h3 className="course--add--title">
                     <svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 13 13" className="add">
                       <polygon points="7,6 7,0 6,0 6,6 0,6 0,7 6,7 6,13 7,13 7,7 13,7 13,6 "></polygon>
                     </svg>
                     New Course
                   </h3>
-                </a>
+                </Link>
               </div>
               
             </div>
           </div>
         : // ↓ if error, redirect to /error
-          <Redirect to="/error" />
+          null // <Redirect to="/error" />
         }
       </React.Fragment>
     )

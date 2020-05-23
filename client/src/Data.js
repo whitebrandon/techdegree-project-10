@@ -2,6 +2,7 @@ import config from './config';
 
 export default class Data {
 
+
   /**
    * creates an HTTP request
    * @param {String} path - pathname to add to url
@@ -16,7 +17,7 @@ export default class Data {
     const options = {
       method,
       cors: 'cors',
-      headers: {}
+      headers: {},
     }
     if (body !== null) {
       options.headers['Content-Type'] = 'application/json; charset=utf-8'

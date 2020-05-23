@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Header = (props) => {
   const { user } = props.context;
@@ -18,16 +19,16 @@ const Header = (props) => {
     <React.Fragment>
         <div className="header">
           <div className="bounds">
-            <h1 className="header--logo"><a href="/" style={{ textDecoration: 'none' }}>Courses</a></h1>
+            <h1 className="header--logo"><Link to="/" style={{ textDecoration: 'none' }}>Courses</Link></h1>
             {user ? // if user signed in, display name and "sign out" btn
               <nav>
                 <span>{`Welcome, ${user.firstName + " " + user.lastName}!`}</span>
-                <a className="signout" href="/signout">Sign Out</a>
+                <Link className="signout" to="/signout">Sign Out</Link>
               </nav>
             : // otherwise, display "sign up" and "sign in" btn
               <nav>
-                <a className="signup" href="/signup">Sign Up</a>
-                <a className="signin" href="/signin">Sign In</a>
+                <Link className="signup" to="/signup">Sign Up</Link>
+                <Link className="signin" to="/signin">Sign In</Link>
               </nav>
             }
           </div>

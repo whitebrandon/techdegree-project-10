@@ -13,7 +13,7 @@ export class Provider extends React.Component {
 
   state = {
     authenticatedUser: Cookie.getJSON('currentUser') || null,
-    errors: null
+    errors: null,
   }
 
   render() {
@@ -80,16 +80,16 @@ export class Provider extends React.Component {
    * @param {String} emailAddress
    * @param {String} password
    */
-  signIn = async (emailAddress, password) => {
+  signIn = async (emailAddress, password, path=null) => {
     const response = await this.data.getUser(emailAddress, password);
     let user, error;
     if (response.status === 200) {
       user = await response.json().then(data => data);
       user.password = password;
       this.setState(() => {
-        return {
-          authenticatedUser: user,
-        }
+          return {
+            authenticatedUser: user,
+          }
       })
       Cookie.set('currentUser', user);
     } else {
@@ -101,7 +101,7 @@ export class Provider extends React.Component {
         }
       })
     }
-    return user
+    return path ? path : null
   }
 
   /**

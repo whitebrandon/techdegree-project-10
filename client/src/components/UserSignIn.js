@@ -1,6 +1,7 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
-class UserSignIn extends React.Component {  
+class UserSignIn extends React.Component {
 
   /**
    * on submit, email and password are sent to api
@@ -10,8 +11,17 @@ class UserSignIn extends React.Component {
     evt.preventDefault();
 
     const { signIn } = this.props.context.actions;
-    
-    signIn(this.email.value, this.password.value)
+
+    let path;
+
+    // if component rendered from private route
+    // redirect, pass from into sign in function
+    if (this.props.location.state) {
+      path = this.props.location.state.from;
+    }
+    return (async () => {
+      return await signIn(this.email.value, this.password.value, path);
+    })().then(path => path ? this.props.history.push(path) : null)
   }
 
   render () {    
@@ -45,12 +55,12 @@ class UserSignIn extends React.Component {
                 }
                 <div className="grid-100 pad-bottom">
                   <button className="button" type="submit">Sign In</button>
-                  <a className="button button-secondary" href="/">Cancel</a>
+                  <Link className="button button-secondary" to="/">Cancel</Link>
                 </div>
               </form>
             </div>
             <p>&nbsp;</p>
-            <p>Don't have a user account? <a href="/signup">Click here</a> to sign up!</p>
+            <p>Don't have a user account? <Link to="/signup">Click here</Link> to sign up!</p>
           </div>
         </div>
       </div>

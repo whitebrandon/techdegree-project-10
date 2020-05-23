@@ -33,12 +33,12 @@ class App extends React.Component {
   render () {
     return (
       <React.Fragment>
-        <HeaderWithContext />
-          <Router>
+        <Router>
+          <HeaderWithContext />
             <Switch>
               <Route exact path="/" component={CoursesWithContext} />
-              <PrivateRoute exact path="/courses/create" redirect="/signin" component={CreateCourseWithContext} />
-              <PrivateRoute path="/courses/:id/update" redirect="/signin" component={UpdateCourseWithContext} />
+              <PrivateRoute exact path="/courses/create" component={CreateCourseWithContext} />
+              <PrivateRoute path="/courses/:id/update" component={UpdateCourseWithContext} />
               <Route exact path="/courses/:id" component={CourseDetailWithContext} />
               <PrivateRoute path="/signin" redirect="/" component={UserSignInWithContext} />
               <PrivateRoute path="/signup" redirect="/" component={UserSignUpWithContext} />
@@ -48,20 +48,10 @@ class App extends React.Component {
               <Route path="/error" component={UnhandledError} />
               <Route component={NotFound} />
             </Switch>
-          </Router>
+        </Router>
       </React.Fragment>
     )
-    /* export default function PrivateRoute ({component: Component, ...rest}) {
-    //   return (
-    //     <Consumer>
-    //       {context => (
-    //         <Route {...rest} render={props => context.user ? <Component {...props} /> : <Redirect to="/signin" /> } />
-    //       )}
-    //     </Consumer>
-    //   )  
-    // } */
   }
-
 }
 
 export default App;
