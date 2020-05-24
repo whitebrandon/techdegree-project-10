@@ -9,7 +9,6 @@ export default class UpdateCourse extends React.Component {
   }
 
   async componentDidMount () {
-  
     const { course } = this.state;
     const { getCourse } = this.props.context.data;
     const { id } = this.props.match.params;
@@ -58,26 +57,34 @@ export default class UpdateCourse extends React.Component {
     const { user } = this.props.context;
     const { updateCourse } = this.props.context.data;
     const { title, description, estimatedTime, materialsNeeded} = this;
+    const { errors } = this.state;
 
     const course = {
       title: title.value,
       description: description.value,
       estimatedTime: estimatedTime.value,
-      materialsNeeded: materialsNeeded.value
+      materialsNeeded: materialsNeeded.value,
+      id: this.state.course.id
     }
-
-    course.id = this.state.course.id
 
     updateCourse(course, user.emailAddress, user.password)
       .then(async res => {
         if (res.status !== 204) {
-          const errors = res // await res.json().then(data => data).then(errorObject => errorObject.errorMsg);
-          console.log(errors)
-          this.setState(() => {
-            return { errors }
-          })
+          if (res.status === 400) {
+            const errors = await res.json().then(data => Object.values(data)[0]);
+            console.log(errors);
+            this.setState(() => {
+              return { errors }
+            })
+          } else {
+            const errors = res;
+            console.log(errors);
+            this.setState(() => {
+              return { errors }
+            })
+          }
         } else {
-          if (this.state.errors) {
+          if (errors) {
             this.setState(() => {
               return {
                 errors: null
@@ -91,6 +98,7 @@ export default class UpdateCourse extends React.Component {
 
   render () {
     const { course, errors } = this.state;
+    const { user } = this.props.context;
     return (
       // MY CODE IS BELOW
       // <form onSubmit={this.handleSubmit}>
@@ -123,7 +131,7 @@ export default class UpdateCourse extends React.Component {
       //   <button type="submit" classNameName="btn btn-secondary rounded">Cancel</button>
       // </form>
       <React.Fragment>
-        {course ? // if course available, render component
+        {course && course.userId === user.id ? // if course owner matches user
           <div>
             <hr />
             <div className="bounds course--detail">
@@ -179,23 +187,19 @@ export default class UpdateCourse extends React.Component {
                   </div>
                   <div className="grid-100 pad-bottom">
                     <button className="button" type="submit">Update Course</button>
-                    <Link className="button button-secondary" to="/">Cancel</Link>
+                    <Link className="button button-secondary" to={`/courses/${course.id}`}>Cancel</Link>
                   </div>
-                </div>
-                <div className="grid-100 pad-bottom">
-                  <button className="button" type="submit">Update Course</button>
-                  <Link className="button button-secondary" to='/' >Cancel</Link>
-                </div>
               </form>
             </div>
           </div>
-        : !course && !errors ?
-          null
-        : errors.status === 403 ?
+        </div>
+        : course && course.userId !== user.id ? // if course owner doesn't match user
           <Redirect to="/forbidden" />
-        : !course && errors.status === 404 ?
+        : !course && !errors ? // if no course and no errors then component was rendered from typing URL instead of by clicking link, return null and api request will be made in componentDidMount
+          null
+        : !course && errors.status === 404 ? // if no course because the course wasn't found, redirect to /notfound
           <Redirect to="/notfound" />
-        :
+        : // otherwise, redirect to /error
           <Redirect to="/error" />
         }
         </React.Fragment>

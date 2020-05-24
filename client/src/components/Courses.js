@@ -44,13 +44,8 @@ class Courses extends React.Component {
         }
       });
     }
-    
-    componentWillUnmount () {
-      this._isMounted = false;
-    }
 
   componentWillUnmount () {
-    console.log('Course unmounted')
     this._isMounted = false;
   }
 
@@ -92,7 +87,7 @@ class Courses extends React.Component {
             </div>
           </div>
         : // if error, redirect to /error
-          null // <Redirect to="/error" />
+          <Redirect to="/error" />
         }
       </React.Fragment>
     )
