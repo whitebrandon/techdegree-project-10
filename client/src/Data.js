@@ -2,7 +2,6 @@ import config from './config';
 
 export default class Data {
 
-
   /**
    * creates an HTTP request
    * @param {String} path - pathname to add to url
@@ -52,7 +51,6 @@ export default class Data {
     return await this.api(`/courses/${courseId}`);
   } 
 
-  // Below is for Sign In
   /**
    * sends a request to api for user
    * @param {String} emailAddress
@@ -62,8 +60,7 @@ export default class Data {
   getUser = async (emailAddress, password) => {
     return await this.api('/users', 'GET', null, true, {emailAddress, password});
   }
-
-  // Below is for Sign Up
+  
   /**
    * sends a user to api be added to database
    * @param {Object} user - a new user

@@ -34,20 +34,20 @@ class App extends React.Component {
     return (
       <React.Fragment>
         <Router>
-          <HeaderWithContext />
-            <Switch>
-              <Route exact path="/" component={CoursesWithContext} />
-              <PrivateRoute exact path="/courses/create" component={CreateCourseWithContext} />
-              <PrivateRoute path="/courses/:id/update" component={UpdateCourseWithContext} />
-              <Route exact path="/courses/:id" component={CourseDetailWithContext} />
-              <PrivateRoute path="/signin" redirect="/" component={UserSignInWithContext} />
-              <PrivateRoute path="/signup" redirect="/" component={UserSignUpWithContext} />
-              <Route path="/signout" component={UserSignOutWithContext} />
-              <Route path="/notfound" component={NotFound} />
-              <Route path="/forbidden" component={Forbidden} />
-              <Route path="/error" component={UnhandledError} />
-              <Route component={NotFound} />
-            </Switch>
+        <HeaderWithContext />
+          <Switch>
+            <Route exact path="/" component={CoursesWithContext} />
+            <PrivateRoute exact path="/courses/create" redirect="/signin" component={CreateCourseWithContext} />
+            <PrivateRoute path="/courses/:id/update" redirect="/signin" component={UpdateCourseWithContext} />
+            <Route exact path="/courses/:id" component={CourseDetailWithContext} />
+            <PrivateRoute path="/signin" redirect="/" component={UserSignInWithContext} />
+            <Route path="/signup" component={UserSignUpWithContext} />
+            <Route path="/signout" component={UserSignOutWithContext} />
+            <Route path="/notfound" component={NotFound} />
+            <Route path="/forbidden" component={Forbidden} />
+            <Route path="/error" component={UnhandledError} />
+            <Route component={NotFound} />
+          </Switch>
         </Router>
       </React.Fragment>
     )

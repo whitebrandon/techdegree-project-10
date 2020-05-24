@@ -34,16 +34,13 @@ export default class CourseDetail extends React.Component {
           })
           console.error(`${res.statusText} for course id: ${id}`);
         }
-      }) // ↓ Catches server errors (i.e. 500 series)
+      }) // Catches internal server errors
       .catch(error => {
-            this.setState(() => {
-              return {
-                error,
-              }
-            })
+        this.setState(() => {
+          return { error }
+        })
       })
   }
-
   /**
    * When "delete" btn is clicked, sends
    * req to api to remove course
@@ -57,20 +54,16 @@ export default class CourseDetail extends React.Component {
 
     deleteCourse(id, emailAddress, password)
       .then(res => {
-          if (res.status !== 204) {
-            this.setState(() => {
-              return {
-                error: res
-              }
-            })
-          } else {
-            this.setState(() => {
-              return {
-                error: null
-              }
-            })
-            this.props.history.push("/")
-          }
+        if (res.status !== 204) {
+          this.setState(() => {
+            return { error: res }
+          })
+        } else {
+          this.setState(() => {
+            return { error: null }
+          })
+          this.props.history.push("/")
+        }
       })
   }
 
@@ -79,7 +72,7 @@ export default class CourseDetail extends React.Component {
     const { course, error } = this.state;
     return (
       <React.Fragment>
-      {!error && course ? // ← if no errors and course available, render component
+      {!error && course ? // if no errors and course available, render component
         <div>
           <hr />
           <div>
@@ -90,9 +83,8 @@ export default class CourseDetail extends React.Component {
                 <div className="course--header">
                   <h4 className="course--label">Course</h4>
                   <h3 className="course--title">{course.title}</h3>
-                  <p>By {course.User.firstName + " " + course.User.lastName}</p>
+                  <p>By {`${course.User.firstName} ${course.User.lastName}`}</p>
                 </div>
-              {/* ================= COURSE DESCRIPTION ================= */}
                 <div className="course--description">
                   <ReactMarkdown source={course.description} />
                 </div>
@@ -110,9 +102,9 @@ export default class CourseDetail extends React.Component {
                     <li className="course--stats--list--item">
                       <h4>Materials Needed</h4>
                       {course.materialsNeeded ? // if materialsNeeded NOT empty, list materials
-                        <ul> 
-                          <li style={{listStyle:"none"}}><ReactMarkdown source={course.materialsNeeded} /></li>
-                        </ul> 
+                        <ul>
+                          <li style={{listStyle: "none"}}><ReactMarkdown source={course.materialsNeeded} /></li>
+                        </ul>
                       : // otherwise, return null
                         null
                       }
@@ -125,14 +117,14 @@ export default class CourseDetail extends React.Component {
             </div>
           </div>
         </div>
-      : 
-      !error && !course ? // ← if no errors and no course, return null
-        null
-      : error.status === 404 ? // ← if error is Not Found error, redirect to /notfound
-        <Redirect to="/notfound" />
       :
-        <Redirect to="/error" /> // otherwise redirect to /error
-      } 
+      !error && !course ? // if no errors and no course, return null
+        null
+      : error.status === 404 ? // if error is "Not Found" error, redirect to /notfound
+        <Redirect to="/notfound" />
+      : 
+        <Redirect to="/error" />
+      }
       </React.Fragment>
     )
   }

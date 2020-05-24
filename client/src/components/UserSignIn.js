@@ -1,10 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-class UserSignIn extends React.Component {
+class UserSignIn extends React.Component {  
 
   /**
-   * on submit, email and password are sent to api
+   * on submit, email and password are sent to the api
    * @param {Event} evt
    */
   handleSubmit = (evt) => {
@@ -14,17 +14,23 @@ class UserSignIn extends React.Component {
 
     let path;
 
-    // if component rendered from private route
-    // redirect, pass from into sign in function
+    // if component rendered via a private route redirect
+    // pass "from" variabe into sign in function
     if (this.props.location.state) {
-      path = this.props.location.state.from;
+      path = this.props.location.state.from
     }
     return (async () => {
       return await signIn(this.email.value, this.password.value, path);
-    })().then(path => path ? this.props.history.push(path) : null)
+    })()
+      .then(path => {
+        if (path) {
+          return this.props.history.push(path);
+        }
+        return null;
+      })
   }
 
-  render () {    
+  render () {
     const { errors } = this.props.context;
     return (
       <div>
@@ -33,20 +39,14 @@ class UserSignIn extends React.Component {
           <div className="grid-33 centered signin">
             <h1>Sign In</h1>
             <div>
-              {/* ========================================================== 
-              =========================== FORM ===========================
-              ========================================================== */}
               <form onSubmit={this.handleSubmit}>
-              {/* ==================== EMAIL ADDRESS =================== */}
                 <div>
-                  <input id="emailAddress" name="emailAddress" type="text" className="" ref={input => this.email = input} placeholder="Email Address" /*onChange={this.handleEmailChange}*/ />
+                  <input id="emailAddress" name="emailAddress" type="text" className="" ref={input => this.email = input} placeholder="Email Address"/>
                 </div>
-              {/* ====================== PASSWORD ====================== */}
                 <div>
-                  <input id="password" name="password" type="password" className="" ref={input => this.password = input} placeholder="Password" /*onChange={this.handlePasswordChange}*/ />
+                  <input id="password" name="password" type="password" className="" ref={input => this.password = input} placeholder="Password"/>
                 </div>
-              {/* ====================================================== */}
-                {errors ? // If login fails, display error message
+                {errors ?
                   <div>
                     <p style={{color: "red", textAlign: "center"}}>Error: Your login is invalid. Please try again. </p>
                   </div>

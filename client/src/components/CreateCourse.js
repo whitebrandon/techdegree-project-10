@@ -17,7 +17,7 @@ class CreateCourse extends React.Component {
     const { createCourse } = this.props.context.data;
     const { emailAddress , password } = this.props.context.user;
 
-    // ↓ Creates course object
+    // Creates course object
     const course =  {
       title: this.title.value,
       description: this.description.value,
@@ -28,13 +28,10 @@ class CreateCourse extends React.Component {
     if (this.materialsNeeded.value) {
       course.materialsNeeded = this.materialsNeeded.value
     }
-
+    
     createCourse(course, emailAddress, password)
       .then(async res => {
         if (res.status === 201) {
-          // Resets validation errors 
-          // in case proceeding for loop fails
-          // ↓ (i.e. server stops sending location header)
           if (this.state.errors) {
             this.setState(() => {
               return {
@@ -42,28 +39,24 @@ class CreateCourse extends React.Component {
               }
             })
           }
-          // ↓ Pushes uri for created course onto history stack
+          // Pushes URI for created course onto history stack
           for (let pair of res.headers.entries()) {
-            if (pair[0] === 'location') {
+            if (pair[0] === "location") {
               this.props.history.push(`/courses/${pair[1].slice(pair[1].indexOf('courses') + 8)}`)
             }
           }
         } else {
           const errors = await res.json().then(data => data).then(errorObject => errorObject.errorMsg);
-          this.setState( () => {
-            return {
-              errors
-            }
+          this.setState(() => {
+            return { errors }
           })
         }
       })
-      // ↓ Catches server errors (i.e. 500+)
+      // Catches Internal Server Errors
       .catch(errors => {
-        console.error('Error: ', errors)
+        console.error('Error: ', errors);
         this.setState(() => {
-          return {
-            errors
-          }
+          return { errors }
         })
       })
   }
@@ -111,9 +104,6 @@ class CreateCourse extends React.Component {
         <div className="bounds course--detail">
           <h1>Create Course</h1>
           <div>
-            {/* ========================================================== 
-              ==================== VALIDATION ERRORS =====================
-              ========================================================== */}
             {errors && Array.isArray(errors) ? // if errors present and part of array, display errors
               <div>
                 <h2 className="validation--errors--label">Validation errors</h2>
@@ -128,10 +118,6 @@ class CreateCourse extends React.Component {
             : // otherwise, hide validation errors section and render form
               null
             }
-
-            {/* ========================================================== 
-              =========================== FORM ===========================
-              ========================================================== */}
             <form onSubmit={this.createNewCourse}>
               <div className="grid-66">
               {/* ==================== COURSE TITLE ==================== */}
@@ -142,7 +128,6 @@ class CreateCourse extends React.Component {
                   </div>
                   <p>By {context.user ? `${context.user.firstName} ${context.user.lastName}` : null }</p>
                 </div>
-              {/* ================= COURSE DESCRIPTION ================= */}
                 <div className="course--description">
                   <div>
                     <textarea id="description" name="description" className="" ref={input => this.description = input} placeholder="Course description..." defaultValue=""></textarea>
@@ -173,7 +158,7 @@ class CreateCourse extends React.Component {
               </div>
               <div className="grid-100 pad-bottom">
                 <button className="button" type="submit">Create Course</button>
-                <Link className="button button-secondary" to='/' >Cancel</Link>
+                <Link className="button button-secondary" to="/" >Cancel</Link>
               </div>
             </form>
           </div>
