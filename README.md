@@ -17,25 +17,31 @@ $ git init
 $ git clone https://github.com/whitebrandon/techdegree-project-10
 ```
 
-<!--Secondly, install dependencies via `npm`:
+Secondly, navigate to the api directory:
+
+```
+$ cd api/
+```
+
+  1. install dependencies via `npm`:
 
 ```
 $ npm install
 ```
 
-Thirdly, seed the SQLite database.
+  2. seed the SQLite database.
 
 ```
 npm run seed
 ```
 
-And lastly, run the application via `node`:
+  3. run the application via `node`:
 
 ```
 $ node app.js
 ```
 
-or `npm`:
+  4. or `npm`:
 
 ```
 $ npm start
@@ -43,19 +49,40 @@ $ npm start
 
 To test the Express server, browse to the URL [http://localhost:5000/](http://localhost:5000/) in web browser
 
+Thirdly, (from the root directory) navigate to client directory:
+
+```
+cd client/
+```
+  1. install dependencies via `npm`:
+
+```
+npm install
+```
+  2. run the application via `npm`:
+
+```
+npm start
+```
+
+If the application doesn't automatically open, 
+browse to the URL [http://localhost:3000/](http://localhost:3000/) in web browser
+
 ## Live Version
 
-A live version of this API can be found by clicking on the following link:
+A live version has not been deployed as of this date.
 
-[School Database RESTful API](https://frozen-sierra-99451.herokuapp.com/)
--->
+
 ## Built With
 
 * [Node.js](https://nodejs.org/en/about/) - "JavaScript runtime environment"
 * [Express](https://expressjs.com/en/4x/api.html) - "Web Framework"
-<!--* [Sequelize/SQLite]() - "A promised-based ORM for Node.js"-->
+* [Sequelize/SQLite]() - "A promised-based ORM for Node.js"
 * [React](reactjs.org) - "A JS library for building UIs"
-* [Sass/Scss](https://sass-lang.com/) - "style sheet language that compiles to CSS"
+* [React Router](https://reacttraining.com/react-router/) - "Declaritive routing for React"
+* [React Markdown](https://github.com/rexxars/react-markdown) - "Renders Markdown as pure React components"
+* [React Bootstrap](https://react-bootstrap.github.io/) - Front-End framework 
+<!--* [Sass/Scss](https://sass-lang.com/) - "style sheet language that compiles to CSS"-->
 
 ## License
 
