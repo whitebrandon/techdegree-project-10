@@ -69,9 +69,11 @@ class Courses extends React.Component {
           <div>
           <hr />
             <div className="bounds">
-            {this.state.courses.map(course => 
-              <CourseCard key={course.id} course={course} />
-            )}
+              <div className="d-flex flex-wrap">
+              {this.state.courses.map(course => 
+                <CourseCard key={course.id} course={course} />
+              )}
+              </div>
               <div className="grid-33">
                 <Link className="course--module course--add--module" to="/courses/create">
                   <h3 className="course--add--title">
