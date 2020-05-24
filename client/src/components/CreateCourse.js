@@ -1,4 +1,5 @@
 import React from 'react';
+import { Redirect, Link } from 'react-router-dom';
 
 class CreateCourse extends React.Component {
 
@@ -6,10 +7,17 @@ class CreateCourse extends React.Component {
     errors: null
   }
 
+  /**
+   * 
+   * @param {Event} evt
+   */
   createNewCourse = (evt) => {
     evt.preventDefault();
+
     const { createCourse } = this.props.context.data;
     const { emailAddress , password } = this.props.context.user;
+
+    // Creates course object
     const course =  {
       title: this.title.value,
       description: this.description.value,
@@ -20,16 +28,10 @@ class CreateCourse extends React.Component {
     if (this.materialsNeeded.value) {
       course.materialsNeeded = this.materialsNeeded.value
     }
+    
     createCourse(course, emailAddress, password)
       .then(async res => {
-        if (res.status !== 201) {
-          const errors = await res.json().then(data => data).then(errorObject => errorObject.errorMsg);
-          this.setState( () => {
-            return {
-              errors
-            }
-          })
-        } else {
+        if (res.status === 201) {
           if (this.state.errors) {
             this.setState(() => {
               return {
@@ -37,12 +39,25 @@ class CreateCourse extends React.Component {
               }
             })
           }
+          // Pushes URI for created course onto history stack
           for (let pair of res.headers.entries()) {
-            if (pair[0] === 'location') {
+            if (pair[0] === "location") {
               this.props.history.push(`/courses/${pair[1].slice(pair[1].indexOf('courses') + 8)}`)
             }
-         }
+          }
+        } else {
+          const errors = await res.json().then(data => data).then(errorObject => errorObject.errorMsg);
+          this.setState(() => {
+            return { errors }
+          })
         }
+      })
+      // Catches Internal Server Errors
+      .catch(errors => {
+        console.error('Error: ', errors);
+        this.setState(() => {
+          return { errors }
+        })
       })
   }
 
@@ -85,40 +100,33 @@ class CreateCourse extends React.Component {
       //     </div>
       // </form>
       <div>
-        {/* Horizontal Line */}
         <hr />
-
-
         <div className="bounds course--detail">
           <h1>Create Course</h1>
           <div>
-            {/* Validation Errors, if present */}
-            { errors ?
-            <div>
-              <h2 className="validation--errors--label">Validation errors</h2>
-              <div className="validation-errors">
-                <ul>
-                  {errors.map((error, index) => <li key={index}>{error.replace('title', 'Course Title').replace('description', 'Course Description')}</li>)}
-                  {/* <li>Please provide a value for "Title"</li>
-                  <li>Please provide a value for "Description"</li> */}
-                </ul>
+            {errors && Array.isArray(errors) ? // if errors present and part of array, display errors
+              <div>
+                <h2 className="validation--errors--label">Validation errors</h2>
+                <div className="validation-errors">
+                  <ul>
+                    {errors.map((error, index) => <li key={index}>{error.replace('title', 'Course Title').replace('description', 'Course Description')}</li>)}
+                  </ul>
+                </div>
               </div>
-            </div>
-            : null
+            : errors && !Array.isArray(errors) ? // if errors present but not part of array, redirect to /error
+              <Redirect to="/error" />
+            : // otherwise, hide validation errors section and render form
+              null
             }
-
-            {/* Start of Form */}
-            <form>
+            <form onSubmit={this.createNewCourse}>
               <div className="grid-66">
                 <div className="course--header">
                   <h4 className="course--label">Course</h4>
-                  {/* Course Title */}
                   <div>
                     <input id="title" name="title" type="text" className="input-title course--title--input" ref={input => this.title = input} placeholder="Course title..." defaultValue="" />
                   </div>
                   <p>By {context.user ? `${context.user.firstName} ${context.user.lastName}` : null }</p>
                 </div>
-                {/* Course Description */}
                 <div className="course--description">
                   <div>
                     <textarea id="description" name="description" className="" ref={input => this.description = input} placeholder="Course description..." defaultValue=""></textarea>
@@ -130,14 +138,12 @@ class CreateCourse extends React.Component {
                   <ul className="course--stats--list">
                     <li className="course--stats--list--item">
                       <h4>Estimated Time</h4>
-                      {/* Estimated Time */}
                       <div>
                         <input id="estimatedTime" name="estimatedTime" type="text" className="course--time--input" ref={input => this.estimatedTime = input} placeholder="Hours" />
                       </div>
                     </li>
                     <li className="course--stats--list--item">
                       <h4>Materials Needed</h4>
-                      {/* Materials Needed */}
                       <div>
                         <textarea id="materialsNeeded" name="materialsNeeded" className="" ref={input => this.materialsNeeded = input} placeholder="List materials..."></textarea>
                       </div>
@@ -146,12 +152,9 @@ class CreateCourse extends React.Component {
                 </div>
               </div>
               <div className="grid-100 pad-bottom">
-                <button className="button" 
-                        type="submit"
-                        onClick={this.createNewCourse
-                          /*context.data.createCourse(course, context.user.username, context.user.password)*/}>Create Course
-                </button>
-                <a className="button button-secondary" href='/' >Cancel</a></div>
+                <button className="button" type="submit">Create Course</button>
+                <Link className="button button-secondary" to="/" >Cancel</Link>
+              </div>
             </form>
           </div>
         </div>

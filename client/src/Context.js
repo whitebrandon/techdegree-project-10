@@ -36,6 +36,11 @@ export class Provider extends React.Component {
     );
   }
 
+  /**
+   * sends request to api to add new user to db,
+   * then calls signIn to log new user into app
+   * @param {Object} user
+   */
   signUp = async (user) => {
     const response = await this.data.createUser(user);
     if (typeof response === 'object') {
@@ -68,7 +73,14 @@ export class Provider extends React.Component {
     return response;
   }
 
-  signIn = async (emailAddress, password) => {
+  /**
+   * sends request to api for user
+   * and either persists the user into global state
+   * or updates the errors state
+   * @param {String} emailAddress
+   * @param {String} password
+   */
+  signIn = async (emailAddress, password, path=null) => {
     const response = await this.data.getUser(emailAddress, password);
     let user, error;
     if (response.status === 200) {
@@ -89,9 +101,12 @@ export class Provider extends React.Component {
         }
       })
     }
-    return user
+    return path ? path : null
   }
 
+  /**
+   * clears cookies and user from global state
+   */
   signOut = () => {
 
     this.setState(() => {

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 class UserSignUp extends React.Component {
 
@@ -6,14 +7,21 @@ class UserSignUp extends React.Component {
     warnings: null
   }
 
+  /**
+   * 
+   * @param {Event} evt
+   */
   handleSubmit = (evt) => {
     evt.preventDefault();
+
     this.setState(() => {
       return {
         warnings: null
       }
     })
+
     const { context } = this.props;
+
     if (this.password.value === this.confirm.value) {
       const newUser = {
         firstName: this.firstName.value,
@@ -32,6 +40,8 @@ class UserSignUp extends React.Component {
   }
 
   render () {
+    const { errors } = this.props.context;
+    const { warnings } = this.state;
     return (
       // MY CODE IS BELOW
       // <div classNameName="container mx-auto w-25 mt-5">
@@ -61,51 +71,55 @@ class UserSignUp extends React.Component {
       //   </form>
       // </div>
       <div>
-        {/* Horizontal Line */}
         <hr />
         <div className="bounds">
           <div className="grid-33 centered signup">
-            {this.props.context.errors || this.state.warnings ? 
+            {errors || warnings ? // if errors or warnings, display validation errors
             <div>
               <h2 className="validation--errors--label">Validation errors</h2>
               <div className="validation-errors">
                 <ul>
-                  {this.state.warnings ? <li>{this.state.warnings}</li> : null ||
-                  this.props.context.errors.map((error, index) => <li key={index}>{error}</li>)}
+                {warnings ? 
+                  <li>{this.state.warnings}</li> 
+                : // check back here, because if warnings is falsy, then null would always be returned
+                  null 
+                ||
+                  errors.map((error, index) => {
+                    return <li key={index}>{error}</li>
+                    })
+                }
                 </ul>
               </div>
             </div>
-            : null}
+            : // if both errors && warnings are falsy, hide validation errors section
+              null
+            }
             <h1>Sign Up</h1>
             <div>
-              {/* Sign Up Form */}
               <form onSubmit={this.handleSubmit}>
                 <div>
-                  <input id="firstName" name="firstName" type="text" className="" ref={input => this.firstName = input} placeholder="First Name" />
+                  <input id="firstName" name="firstName" type="text" className="" ref={input => this.firstName = input} placeholder="First Name"/>
                 </div>
                 <div>
-                  <input id="lastName" name="lastName" type="text" className="" ref={input => this.lastName = input} placeholder="Last Name" />
+                  <input id="lastName" name="lastName" type="text" className="" ref={input => this.lastName = input} placeholder="Last Name"/>
                 </div>
                 <div>
-                  <input id="emailAddress" name="emailAddress" type="text" className="" ref={input => this.email = input} placeholder="Email Address" />
+                  <input id="emailAddress" name="emailAddress" type="text" className="" ref={input => this.email = input} placeholder="Email Address"/>
                 </div>
                 <div>
-                  <input id="password" name="password" type="password" className="" ref={input => this.password = input} placeholder="Password" />
+                  <input id="password" name="password" type="password" className="" ref={input => this.password = input} placeholder="Password"/>
                 </div>
                 <div>
-                  <input id="confirmPassword" name="confirmPassword" type="password" ref={input => this.confirm = input} className="" placeholder="Confirm Password" />
+                  <input id="confirmPassword" name="confirmPassword" type="password" ref={input => this.confirm = input} className="" placeholder="Confirm Password"/>
                 </div>
-                {/* Button Section of Form */}
                 <div className="grid-100 pad-bottom">
-                  {/* Submit Button */}
                   <button className="button" type="submit">Sign Up</button>
-                  {/* Cancel Button */}
-                  <a className="button button-secondary" href="/" >Cancel</a>
+                  <Link className="button button-secondary" to="/" >Cancel</Link>
                 </div>
               </form>
             </div>
             <p>&nbsp;</p>
-            <p>Already have a user account? <a href="/signin">Click here</a> to sign in!</p>
+            <p>Already have a user account? <Link to="/signin">Click here</Link> to sign in!</p>
           </div>
         </div>
       </div>

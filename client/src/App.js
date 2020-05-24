@@ -33,35 +33,25 @@ class App extends React.Component {
   render () {
     return (
       <React.Fragment>
+        <Router>
         <HeaderWithContext />
-          <Router>
-            <Switch>
-              <Route exact path="/" component={CoursesWithContext} />
-              <PrivateRoute exact path="/courses/create" redirect="/signin" component={CreateCourseWithContext} />
-              <PrivateRoute path="/courses/:id/update" redirect="/signin" component={UpdateCourseWithContext} />
-              <Route exact path="/courses/:id" component={CourseDetailWithContext} />
-              <PrivateRoute path="/signin" redirect="/" component={UserSignInWithContext} />
-              <Route path="/signup" component={UserSignUpWithContext} />
-              <Route path="/signout" component={UserSignOutWithContext} />
-              <Route path="/notfound" component={NotFound} />
-              <Route path="/forbidden" component={Forbidden} />
-              <Route path="/error" component={UnhandledError} />
-              <Route component={NotFound} />
-            </Switch>
-          </Router>
+          <Switch>
+            <Route exact path="/" component={CoursesWithContext} />
+            <PrivateRoute exact path="/courses/create" redirect="/signin" component={CreateCourseWithContext} />
+            <PrivateRoute path="/courses/:id/update" redirect="/signin" component={UpdateCourseWithContext} />
+            <Route exact path="/courses/:id" component={CourseDetailWithContext} />
+            <PrivateRoute path="/signin" redirect="/" component={UserSignInWithContext} />
+            <Route path="/signup" component={UserSignUpWithContext} />
+            <Route path="/signout" component={UserSignOutWithContext} />
+            <Route path="/notfound" component={NotFound} />
+            <Route path="/forbidden" component={Forbidden} />
+            <Route path="/error" component={UnhandledError} />
+            <Route component={NotFound} />
+          </Switch>
+        </Router>
       </React.Fragment>
     )
-    /* export default function PrivateRoute ({component: Component, ...rest}) {
-    //   return (
-    //     <Consumer>
-    //       {context => (
-    //         <Route {...rest} render={props => context.user ? <Component {...props} /> : <Redirect to="/signin" /> } />
-    //       )}
-    //     </Consumer>
-    //   )  
-    // } */
   }
-
 }
 
 export default App;

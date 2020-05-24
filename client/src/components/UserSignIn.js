@@ -1,69 +1,66 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
-class UserSignIn extends React.Component /* (props) => */ {  
+class UserSignIn extends React.Component {  
 
-  state = {
-    email: '',
-    password: ''
-  }
-
-  handleEmailChange = (evt) => {
-    this.setState({
-      email: evt.target.value
-    });
-  }
-
-  handlePasswordChange = (evt) => {
-    this.setState({
-      password: evt.target.value
-    });
-  }
-
+  /**
+   * on submit, email and password are sent to the api
+   * @param {Event} evt
+   */
   handleSubmit = (evt) => {
     evt.preventDefault();
-    const { context } = this.props;
-    context.actions.signIn(this.state.email, this.state.password)
+
+    const { signIn } = this.props.context.actions;
+
+    let path;
+
+    // if component rendered via a private route redirect
+    // pass "from" variabe into sign in function
+    if (this.props.location.state) {
+      path = this.props.location.state.from
+    }
+    return (async () => {
+      return await signIn(this.email.value, this.password.value, path);
+    })()
+      .then(path => {
+        if (path) {
+          return this.props.history.push(path);
+        }
+        return null;
+      })
   }
 
-  render () {    
-    
+  render () {
+    const { errors } = this.props.context;
     return (
       <div>
-        {/* Horizontal Line */}
         <hr />
-
         <div className="bounds">
           <div className="grid-33 centered signin">
             <h1>Sign In</h1>
             <div>
-
-              {/* Sign In Form */}
               <form onSubmit={this.handleSubmit}>
-                {/* Email Address Input */}
                 <div>
-                  <input id="emailAddress" name="emailAddress" type="text" className="" placeholder="Email Address" onChange={this.handleEmailChange} />
+                  <input id="emailAddress" name="emailAddress" type="text" className="" ref={input => this.email = input} placeholder="Email Address"/>
                 </div>
-                {/* Password Input */}
                 <div>
-                  <input id="password" name="password" type="password" className="" placeholder="Password" onChange={this.handlePasswordChange} />
+                  <input id="password" name="password" type="password" className="" ref={input => this.password = input} placeholder="Password"/>
                 </div>
-                { this.props.context.errors ?
-                <div>
-                  <p style={{color: "red", textAlign: "center"}}>Error: Your login is invalid. Please try again. </p>
-                </div>
-                : null
+                {errors ?
+                  <div>
+                    <p style={{color: "red", textAlign: "center"}}>Error: Your login is invalid. Please try again. </p>
+                  </div>
+                : 
+                  null
                 }
-                {/* Button Section of Form */}
                 <div className="grid-100 pad-bottom">
-                  {/* Submit Button */}
                   <button className="button" type="submit">Sign In</button>
-                  {/* Cancel Button */}
-                  <a className="button button-secondary" href="/">Cancel</a>
+                  <Link className="button button-secondary" to="/">Cancel</Link>
                 </div>
               </form>
             </div>
             <p>&nbsp;</p>
-            <p>Don't have a user account? <a href="/signup">Click here</a> to sign up!</p>
+            <p>Don't have a user account? <Link to="/signup">Click here</Link> to sign up!</p>
           </div>
         </div>
       </div>
