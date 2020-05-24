@@ -13,7 +13,6 @@ export class Provider extends React.Component {
 
   state = {
     authenticatedUser: Cookie.getJSON('currentUser') || null,
-    errors: null,
   }
 
   render() {
@@ -21,7 +20,6 @@ export class Provider extends React.Component {
     const value = {
       data: this.data,
       user: this.state.authenticatedUser,
-      errors: this.state.errors,
       actions: {
         signIn: this.signIn,
         signOut: this.signOut,
@@ -42,35 +40,34 @@ export class Provider extends React.Component {
    * @param {Object} user
    */
   signUp = async (user) => {
-    const response = await this.data.createUser(user);
-    if (typeof response === 'object') {
-      if ('status' in response) {
-        if (response.status === 201) {
+    try {
+      const response = await this.data.createUser(user);
+      if (response.status === 201) {
+        console.log(`User ${user.firstName} ${user.lastName} has been successfully signed up`);
+        try {
           return await this.signIn(user.emailAddress, user.password);
+        } catch (errors) {
+          return errors
         }
+      } else if (response.status >= 400 && response.status < 500) {
+        const errors = await response.json().then(data => Object.values(data));
+        if (!Array.isArray(errors[0])) {
+          return errors;
+        }
+        return errors[0].map(message => (
+          message.replace('firstName', 'First Name')
+                 .replace('lastName', 'Last Name')
+                 .replace('emailAddress', 'Email Address')
+                 .replace('password', 'Password')
+        ))
+      } else {
         return response;
-      } else if ('errorMsg' in response) {
-        this.setState(() => {
-          if (Array.isArray(response.errorMsg)) {
-            return {
-              errors: Object.values(response.errorMsg).map(message => {
-                return (
-                  message.replace('firstName', 'First Name')
-                        .replace('lastName', 'Last Name')
-                        .replace('emailAddress', 'Email Address')
-                        .replace('password', 'Password')
-                )
-              })
-            }
-          } else {
-            return {
-              errors: [response.errorMsg]
-            }
-          }
-        })
       }
+    } catch (error) {
+      const errors = new Error(error);
+      errors.status = 500;
+      return errors;
     }
-    return response;
   }
 
   /**
@@ -81,40 +78,38 @@ export class Provider extends React.Component {
    * @param {String} password
    */
   signIn = async (emailAddress, password, path=null) => {
-    const response = await this.data.getUser(emailAddress, password);
-    let user, error;
-    if (response.status === 200) {
-      user = await response.json().then(data => data);
-      user.password = password;
-      this.setState(() => {
-          return {
-            authenticatedUser: user,
-          }
-      })
-      Cookie.set('currentUser', user);
-    } else {
-      error = await response.json().then(data => data)
-      console.log(error)
-      this.setState(() => {
-        return {
-          errors: error
-        }
-      })
+    try {
+      const res = await this.data.getUser(emailAddress, password);
+      let user;
+      if (res.status === 200) {
+        user = await res.json().then(data => data);
+        user.password = password;
+        this.setState(() => {
+            return {
+              authenticatedUser: user,
+            }
+        })
+        Cookie.set('currentUser', user);
+      } else {
+        return res;
+      }
+      return path ? path : null
+    } catch (error) {
+      const errors = new Error(error)
+      errors.status = 500;
+      return errors
     }
-    return path ? path : null
   }
 
   /**
    * clears cookies and user from global state
    */
   signOut = () => {
-
     this.setState(() => {
       return {
         authenticatedUser: null
       }
     })
-
     Cookie.remove('currentUser');
   }
 
