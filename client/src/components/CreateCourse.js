@@ -120,6 +120,7 @@ class CreateCourse extends React.Component {
             }
             <form onSubmit={this.createNewCourse}>
               <div className="grid-66">
+              {/* ==================== COURSE TITLE ==================== */}
                 <div className="course--header">
                   <h4 className="course--label">Course</h4>
                   <div>
@@ -132,22 +133,26 @@ class CreateCourse extends React.Component {
                     <textarea id="description" name="description" className="" ref={input => this.description = input} placeholder="Course description..." defaultValue=""></textarea>
                   </div>
                 </div>
+              {/* ====================================================== */}
               </div>
               <div className="grid-25 grid-right">
                 <div className="course--stats">
                   <ul className="course--stats--list">
+                  {/* ================= ESTIMATED TIME ================= */}
                     <li className="course--stats--list--item">
                       <h4>Estimated Time</h4>
                       <div>
                         <input id="estimatedTime" name="estimatedTime" type="text" className="course--time--input" ref={input => this.estimatedTime = input} placeholder="Hours" />
                       </div>
                     </li>
+                  {/* ================ MATERIALS NEEDED ================ */}
                     <li className="course--stats--list--item">
                       <h4>Materials Needed</h4>
                       <div>
                         <textarea id="materialsNeeded" name="materialsNeeded" className="" ref={input => this.materialsNeeded = input} placeholder="List materials..."></textarea>
                       </div>
                     </li>
+                  {/* ================================================== */}
                   </ul>
                 </div>
               </div>

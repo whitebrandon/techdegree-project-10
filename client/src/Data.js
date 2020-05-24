@@ -16,7 +16,7 @@ export default class Data {
     const options = {
       method,
       cors: 'cors',
-      headers: {}
+      headers: {},
     }
     if (body !== null) {
       options.headers['Content-Type'] = 'application/json; charset=utf-8'
@@ -60,7 +60,7 @@ export default class Data {
   getUser = async (emailAddress, password) => {
     return await this.api('/users', 'GET', null, true, {emailAddress, password});
   }
-
+  
   /**
    * sends a user to api be added to database
    * @param {Object} user - a new user

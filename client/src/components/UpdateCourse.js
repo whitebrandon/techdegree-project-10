@@ -1,7 +1,6 @@
 import React from 'react';
 import { Redirect, Link } from 'react-router-dom';
 
-
 export default class UpdateCourse extends React.Component {
   
   state = {
@@ -10,7 +9,7 @@ export default class UpdateCourse extends React.Component {
   }
 
   async componentDidMount () {
-
+  
     const { course } = this.state;
     const { getCourse } = this.props.context.data;
     const { id } = this.props.match.params;
@@ -158,6 +157,7 @@ export default class UpdateCourse extends React.Component {
                         <textarea id="description" name="description" ref={input => this.description = input} className="" defaultValue={course.description} placeholder="Course description..."></textarea>
                       </div>
                     </div>
+                    <p>By {`${course.User.firstName} ${course.User.lastName}`}</p>
                   </div>
                   <div className="grid-25 grid-right">
                     <div className="course--stats">
@@ -181,8 +181,12 @@ export default class UpdateCourse extends React.Component {
                     <button className="button" type="submit">Update Course</button>
                     <Link className="button button-secondary" to="/">Cancel</Link>
                   </div>
-                </form>
-              </div>
+                </div>
+                <div className="grid-100 pad-bottom">
+                  <button className="button" type="submit">Update Course</button>
+                  <Link className="button button-secondary" to='/' >Cancel</Link>
+                </div>
+              </form>
             </div>
           </div>
         : !course && !errors ?

@@ -79,6 +79,7 @@ export default class CourseDetail extends React.Component {
             <ButtonContainer user={user} course={course} deleteCourse={this.handleDelete} />
             <div className="bounds course--detail">
               <div className="grid-66">
+              {/* ==================== COURSE TITLE ==================== */}
                 <div className="course--header">
                   <h4 className="course--label">Course</h4>
                   <h3 className="course--title">{course.title}</h3>
@@ -87,14 +88,17 @@ export default class CourseDetail extends React.Component {
                 <div className="course--description">
                   <ReactMarkdown source={course.description} />
                 </div>
+              {/* ====================================================== */}
               </div>
               <div className="grid-25 grid-right">
                 <div className="course--stats">
                   <ul className="course--stats--list">
+                  {/* ================= ESTIMATED TIME ================= */}
                     <li className="course--stats--list--item">
                       <h4>Estimated Time</h4>
                       <h3>{course.estimatedTime}</h3>
                     </li>
+                  {/* ================ MATERIALS NEEDED ================ */}
                     <li className="course--stats--list--item">
                       <h4>Materials Needed</h4>
                       {course.materialsNeeded ? // if materialsNeeded NOT empty, list materials
@@ -105,9 +109,11 @@ export default class CourseDetail extends React.Component {
                         null
                       }
                     </li>
+                  {/* ================================================== */}
                   </ul>
                 </div>
               </div>
+              {/* =================== END CONTAINER ==================== */}
             </div>
           </div>
         </div>

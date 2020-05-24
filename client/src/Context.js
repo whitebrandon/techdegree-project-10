@@ -13,7 +13,7 @@ export class Provider extends React.Component {
 
   state = {
     authenticatedUser: Cookie.getJSON('currentUser') || null,
-    errors: null
+    errors: null,
   }
 
   render() {
@@ -87,9 +87,9 @@ export class Provider extends React.Component {
       user = await response.json().then(data => data);
       user.password = password;
       this.setState(() => {
-        return {
-          authenticatedUser: user,
-        }
+          return {
+            authenticatedUser: user,
+          }
       })
       Cookie.set('currentUser', user);
     } else {
@@ -124,7 +124,7 @@ export const Consumer = AppContext.Consumer;
 
 /**
  * A higher-order component that wraps the provided component in a Context Consumer component.
- * @param {class} Component - A React component.
+ * @param {class} WrappedComponent - A React component.
  * @returns {function} A higher-order component.
  */
 

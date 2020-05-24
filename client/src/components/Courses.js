@@ -12,7 +12,7 @@ class Courses extends React.Component {
 
   state = {
     courses: [],
-    error: null
+    error: null,
   }
 
   /**
@@ -49,8 +49,12 @@ class Courses extends React.Component {
       this._isMounted = false;
     }
 
-  render () {
+  componentWillUnmount () {
+    console.log('Course unmounted')
+    this._isMounted = false;
+  }
 
+  render () {
     return (
       // BELOW IS MY CODE
       // <div className="row">
