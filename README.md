@@ -1,8 +1,4 @@
-# TECH DEGREE PROJECT #10 | Full Stack App with React and a REST API
-
-a COURSE BY TREEHOUSE
-
-JS CODE by Brandon White | white.brandonsean@gmail.com
+# Full Stack App with React and a REST API
 
 A full stack application that provides a way for users to adminster a school database containing information about courses.
 
