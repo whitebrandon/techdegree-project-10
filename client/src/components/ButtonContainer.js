@@ -7,14 +7,13 @@ export default function ButtonContainer (props) {
     <div className="actions--bar">
       <div className="bounds">
         <div className="grid-100">
-          {props.user && props.user.id === props.course.userId ?
+          {props.user && props.user.id === props.course.userId &&
           <span>
             {/* UPDATE BUTTON */}
             <Link className="button" to={{ pathname: `/courses/${props.course.id}/update`, state: { course: props.course }}}>Update Course</Link>
             {/* DELETE BUTTON */}
             <Link className="button" to="/" onClick={props.deleteCourse}>Delete Course</Link>
-          </span> :
-          null }
+          </span>}
           {/* HOME BUTTON */}
           <Link className="button button-secondary" to="/">Return to List</Link>
         </div>
